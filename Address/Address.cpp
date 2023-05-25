@@ -44,3 +44,22 @@ void Address::setAdditionalInfo(const MyString& additionalInfo)
 {
     this->additionalInfo = additionalInfo;
 }
+
+std::ostream& operator<<(std::ostream& os, const Address& address)
+{
+    os << address.name << std::endl;
+    os << address.latitude<< std::endl;
+    os << address.longitude << std::endl;
+    os << address.additionalInfo << std::endl;
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, Address& address)
+{
+    is >> address.name;
+    is >> address.latitude;
+    is >> address.longitude;
+    is >> address.additionalInfo;
+
+    return is;
+}
