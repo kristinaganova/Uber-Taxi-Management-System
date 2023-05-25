@@ -1,0 +1,52 @@
+#pragma once
+#include "SharedPtr.hpp"
+#include "User.h"
+#include "Address.h"
+#include "MessageManager.h"
+#include "OrderManager.h"
+#include "Order.h"
+#include "Rating.h"
+
+class Rating;
+class Order;
+class OrderManager;
+
+class Driver : public User
+{
+	MyString carNumber;
+	MyString phoneNumber;
+	Address currentAddress;
+	SharedPtr<MessageManager> messages;
+	SharedPtr<OrderManager> orders;
+	Vector<Rating> ratings;
+
+public:
+	Driver(const MyString& firstName, const MyString& lastName, const MyString& username, 
+		   const MyString& password, const MyString& carNumber, const MyString& phoneNumber);
+	Driver();
+
+	const MyString& getCarNumber() const;
+	const MyString& getPhoneNumber() const;
+	const Address& getCurrentAddress() const;
+
+	void setCarNumber(const MyString& carNumber);
+	void setPhoneNumber(const MyString& phoneNumber);
+
+	void registerUser() override;
+	bool login() override;
+	void logout() override;
+
+	void saveRegisteredUserToFile(const User& user, const char* fileName) override;
+	Vector<User*> loadRegisteredUserFromFile(const char* fileName) override;
+
+	void changeAddress(const Address& address);
+	void checkMessages();
+	void acceptOrder(const Order& order);
+	void declineOrder(int id);
+	void finishOrder(int id);
+	void acceptPayment(int id, double amount);
+
+	void addRating(const Rating& rating);
+
+	double getAverageRating() const;
+};
