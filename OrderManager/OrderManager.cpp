@@ -12,8 +12,12 @@ void OrderManager::removeOrder(unsigned int orderId)
 		if (orders[i].getId() == orderId)
 		{
 			orders.popAt(i);
+			std::cout << "Order canceled successfully" << std::endl;
+			return;
 		}
 	}
+
+	std::cout << "Order with id: " << orderId << " not found!" << std::endl;
 }
 
 Order* OrderManager::findOrderById(unsigned int orderId)

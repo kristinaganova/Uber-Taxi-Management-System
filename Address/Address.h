@@ -4,24 +4,36 @@
 
 class Address
 {
+protected:
+    struct Point
+    {
+        Point() :x(0), y(0) {}
+        Point(int x, int y) :x(x), y(y) {}
+        int x;
+        int y;
+        double getDist(const Point& other) const
+        {
+            int dx = x - other.x;
+            int dy = y - other.y;
+
+            return sqrt(dx * dx + dy * dy);
+        }
+    };
 private :
     MyString name;
-    double latitude;
-    double longitude;
+    Point point;
     MyString additionalInfo;
 
 public:
     Address();
-    Address(const MyString& name, double latitude, double longitude, const MyString& additionalInfo);
+    Address(const MyString& name, int x, int y, const MyString& additionalInfo);
 
     const MyString& getName() const;
-    double getLatitude() const;
-    double geLongiitude() const;
+    
     const MyString& getAdditionalInfo() const;
 
     void setName(const MyString& name);
-    void setLatitude(double latitude);
-    void setLongitude(double longitude);
+  
     void setAdditionalInfo(const MyString& additionalInfo);
 
    friend std::ostream& operator<<(std::ostream& os, const Address& address);

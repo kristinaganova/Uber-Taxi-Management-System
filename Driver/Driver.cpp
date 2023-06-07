@@ -2,6 +2,7 @@
 #include "Order.h"
 #include "helpers.h"
 #include <fstream>
+#include "UniquePtr.hpp"
 
 Driver::Driver(const MyString& firstName, const MyString& lastName, const MyString& username, 
                const MyString& password, const MyString& carNumber, const MyString& phoneNumber)
@@ -114,9 +115,9 @@ bool Driver::login()
     return false;
 }
 
-void Driver::logout()
+User* Driver::clone() const
 {
-    std::cout << "Logout successful!" << std::endl;
+    return new Driver(*this);
 }
 
 void Driver::saveRegisteredUserToFile(const User& user, const char* fileName) 
@@ -173,8 +174,6 @@ Vector<User*> Driver::loadRegisteredUserFromFile(const char* fileName)
         {
             Driver* driver = new Driver(firstName, lastName, username, password, carNumber, phoneNumber);
             registeredUsers.pushBack(driver); 
-
-            delete driver;
         }
         else
         {
@@ -188,6 +187,11 @@ Vector<User*> Driver::loadRegisteredUserFromFile(const char* fileName)
     return registeredUsers;
 }
 
+void Driver::receiveMessage(const Message& message)
+{
+    messages->addMessage(message);
+}
+
 void Driver::changeAddress(const Address& address)
 {
     this->currentAddress = address;
@@ -199,16 +203,16 @@ void Driver::checkMessages()
      messages->printAllMessages();
 }
 
-void Driver::acceptOrder(const Order& order) 
+void Driver::acceptOrder(unsigned int id)
 {
-    Order* foundOrder = orders->findOrderById(order.getId());
+    Order* foundOrder = orders->findOrderById(id);
     if (foundOrder) 
     {
         foundOrder->setStatus(Status::Accepted);
     }
 }
 
-void Driver::declineOrder(int id)
+void Driver::declineOrder(unsigned int id)
 {
     Order* foundOrder = orders->findOrderById(id);
     if (foundOrder)
@@ -217,7 +221,7 @@ void Driver::declineOrder(int id)
     }
 }
 
-void Driver::finishOrder(int id)
+void Driver::finishOrder(unsigned int id)
 {
     Order* foundOrder = orders->findOrderById(id);
     if (foundOrder)
@@ -226,7 +230,7 @@ void Driver::finishOrder(int id)
     }
 }
 
-void Driver::acceptPayment(int id, double amount) 
+void Driver::acceptPayment(unsigned int id, double amount)
 {
     Order* foundOrder = orders->findOrderById(id);
     if (foundOrder) 

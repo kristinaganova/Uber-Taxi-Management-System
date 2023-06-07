@@ -1,26 +1,26 @@
 #include "Message.h"
 
-Message::Message(const MyString& content) : content(content) {}
+Message::Message(const MyString& content, unsigned int id) : content(content), id(id) {}
 
-Message::Message() : Message("") {}
+Message::Message() : Message("", 0) {}
 
 const MyString& Message::getContent() const
 {
-	markAsRead();
-	return content;
+    markAsRead();
+    return content;
 }
 
 unsigned int Message::getId() const
 {
-	return id;
+    return id;
 }
 
 bool Message::isRead() const
 {
-	return read;
+    return read;
 }
 
-void Message::markAsRead() const
+void Message::markAsRead() const 
 {
-	read = true;
+    read = true;
 }

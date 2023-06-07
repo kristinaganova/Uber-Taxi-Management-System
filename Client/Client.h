@@ -17,18 +17,18 @@ public:
 	Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password);
 	Client(const MyString& firstName, const MyString& lastName, 
 		   const MyString& username, const MyString& password, double balance);
-	Client() = default;
+	Client();
 
 	void setBalance(double balance);
 
-	double getbalance() const;
+	double getBalance() const;
 
 	void saveRegisteredUserToFile(const User& user, const char* fileName) override;
 	Vector<User*> loadRegisteredUserFromFile(const char* fileName) override;
 
 	void registerUser() override;
 	bool login() override;
-	void logout() override;
+	User* clone() const override;
 
 	void placeOrder(const Address& address, const Address& destination, int numberOfPassengers, OrderManager& orders);
 	Status checkOrderStatus(OrderManager& orders, unsigned int id);

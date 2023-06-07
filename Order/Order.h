@@ -19,12 +19,16 @@ enum class Status
 	Canceled
 };
 
+MyString toStringStatus(Status status);
+
 enum class PaymentStatus
 {
 	Paid,
 	Pending,
 	NotPaid
 };
+
+MyString toStringPaymentStatus(PaymentStatus status);
 
 class Order
 {
@@ -45,7 +49,7 @@ public:
 		int numberOfPassengers, Status status, PaymentStatus paymentStatus,
 		double paymentAmount, SharedPtr<Client> client, SharedPtr<Driver> driver);
 	Order(const Address& startAddress, const Address& destination, int numberOfPassengers);
-	Order() = default;
+	Order();
 
 	unsigned int getId() const;
 	const Address& getStartAddress() const;
@@ -63,8 +67,9 @@ public:
 	void setStatus(Status status);
 	void setPaymentStatus(PaymentStatus status);
 	void setPaymentAmount(double amount);
-	void setClient(SharedPtr<Client> user);
-	void setDriver(SharedPtr<Driver> user);
+	void setClient(SharedPtr<Client> client);
+	void setDriver(SharedPtr<Driver> driver);
 
+	//void saveOrderToFile(const Order& order, const char* fileName);
 	void printOrderDetails() const;
 };

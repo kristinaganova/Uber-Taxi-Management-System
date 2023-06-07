@@ -2,31 +2,31 @@
 
 void MessageManager::addMessage(const Message& message)
 {
-	messages.pushBack(message);
+    messages.pushBack(message);
 }
 
 void MessageManager::printUnreadMessages() const
 {
-	for (size_t i = 0; i < messages.getSize(); i++)
-	{
-		if (!messages[i].isRead()) 
-		{
-			std:: cout << messages[i].getContent() << std::endl;
-			messages[i].markAsRead();
-		}
-	}
+    for (size_t i = 0; i < messages.getSize(); i++)
+    {
+        if (!messages[i].isRead())
+        {
+            std::cout << messages[i].getContent() << std::endl;
+            messages[i].markAsRead();
+        }
+    }
 }
 
-void MessageManager::removeMessage(int messageId)
+void MessageManager::removeMessage(unsigned int messageId)
 {
-	for (size_t i = 0; i < messages.getSize(); i++)
-	{
-		if (messages[i].getId() == messageId)
-		{
-			messages.popAt(i);
-			break;
-		}
-	}
+    for (size_t i = 0; i < messages.getSize(); i++)
+    {
+        if (messages[i].getId() == messageId)
+        {
+            messages.popAt(i);
+            break;
+        }
+    }
 }
 
 void MessageManager::deleteAllMessages()
@@ -36,10 +36,22 @@ void MessageManager::deleteAllMessages()
 
 void MessageManager::printAllMessages() const
 {
-	for (size_t i = 0; i < messages.getSize(); i++)
-	{
-		std::cout << "Message " << messages[i].getId() << std::endl;
-		std::cout << messages[i].getContent() << std::endl;
-		messages[i].markAsRead();
-	}
+    for (size_t i = 0; i < messages.getSize(); i++)
+    {
+        std::cout << "Message " << messages[i].getId() << std::endl;
+        std::cout << messages[i].getContent() << std::endl;
+        messages[i].markAsRead();
+    }
+}
+
+Message* MessageManager::getMessageById(unsigned int messageId)
+{
+    for (size_t i = 0; i < messages.getSize(); i++)
+    {
+        if (messages[i].getId() == messageId)
+        {
+            return &messages[i];
+        }
+    }
+    return nullptr;
 }

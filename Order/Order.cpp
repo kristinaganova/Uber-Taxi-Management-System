@@ -1,16 +1,64 @@
 #include "Order.h"
+#include <fstream>
 
-int Order::nextId = 0;
+MyString toStringStatus(Status status)
+{
+    if (status == Status::Pending)
+    {
+        return "Pending";
+    }
+    else if (status == Status::Accepted)
+    {
+        return "Accepted";
+    }
+    else if (status == Status::InProgress)
+    {
+        return "In progress";
+    }
+    else if (status == Status::Completed)
+    {
+        return "Completed";
+    }
+    else if (status == Status::Canceled)
+    {
+        return "Canceled";
+    }
+    return "Unknown";
+}
+
+MyString toStringPaymentStatus(PaymentStatus status)
+{
+    if (status == PaymentStatus::Pending)
+    {
+        return "Pending";
+    }
+    else if (status == PaymentStatus::Paid)
+    {
+        return "Paid";
+    }
+    else if (status == PaymentStatus::NotPaid)
+    {
+        return "Not paid";
+    }
+    return "Unknown";
+}
+
+int Order::nextId = 1;
+
+Order::Order(): id(1), start("", 0, 0, ""),  destination("", 0, 0, ""), passengersCount(0), status(Status::Pending), paymentStatus(PaymentStatus::NotPaid), paymentAmount(0),client(nullptr), driver(nullptr) {}
 
 Order::Order(const Address& startAddress, const Address& destination,
     int numberOfPassengers, Status status, PaymentStatus paymentStatus,
     double paymentAmount, SharedPtr<Client> client, SharedPtr<Driver> driver)
     : id(nextId++), start(startAddress), destination(destination), passengersCount(numberOfPassengers),
-    status(status), paymentStatus(paymentStatus), paymentAmount(paymentAmount),
-    client(client), driver(driver) {}
+    status(status), paymentStatus(paymentStatus), paymentAmount(paymentAmount)
+{
+    setClient(client);
+    setDriver(driver);
+}
 
 Order::Order(const Address& startAddress, const Address& destination, int numberOfPassengers)
-      :id(nextId++), status(Status::Pending), paymentStatus(PaymentStatus::Pending), start(startAddress), destination(destination), passengersCount(numberOfPassengers) {}
+      :id(nextId++), status(Status::Pending), paymentStatus(PaymentStatus::Pending), start(startAddress), destination(destination), passengersCount(numberOfPassengers), paymentAmount(0) {}
 
 unsigned int Order::getId() const
 {
@@ -59,7 +107,7 @@ void Order::setDestination(const Address& destination)
 
 void Order::setPassengerCount(unsigned short passengersCount)
 {
-    if (passengersCount = 0 || passengersCount > 4)
+    if (passengersCount == 0 || passengersCount > 4)
     {
         throw std::out_of_range("The passengers seats are maximum of 4!");
     }
@@ -86,10 +134,36 @@ void Order::setClient(SharedPtr<Client> client)
     this->client = client;
 }
 
-void Order::setDriver(SharedPtr<Driver> user)
+void Order::setDriver(SharedPtr<Driver> driver)
 {
-    this->driver = driver;
+    if (driver)
+        this->driver = driver;
+    else
+        this->driver = nullptr;
 }
+
+//void Order::saveOrderToFile(const Order& order, const char* fileName)
+//{
+//    std::ofstream file(fileName, std::ios::app);
+//    if (!file.is_open())
+//    {
+//        std::cout << "Error: Unable to open file " << fileName << " for writing." << std::endl;
+//        return;
+//    }
+//
+//    if (order.getStatus() == Status::Completed)
+//    {
+//        file << order.getId() << " ";
+//        file << order.getStartAddress() << " ";
+//        file << order.getDestination() << " ";
+//        file << order.getPassengerCount() << " ";
+//        file << order.getPaymentAmount() << " ";
+//        file << order.getClient() << " ";
+//        file << order.getDriver() << " ";
+//    }
+//
+//    file.close();
+//}
 
 void Order::printOrderDetails() const
 {

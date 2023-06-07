@@ -3,16 +3,16 @@
 
 class Message
 {
-	MyString content;
-	mutable bool read = false;
-	unsigned int id;
+    MyString content;
+    mutable bool read = false;
+    unsigned int id;
 
 public:
-	Message(const MyString& content);
-	Message();
+    Message(const MyString& content, unsigned int id);
+    Message();
 
-	const MyString& getContent() const;
-	unsigned int getId() const;
-	bool isRead() const;
-	void markAsRead() const;
+    const MyString& getContent() const;
+    unsigned int getId() const;
+    bool isRead() const;
+    void markAsRead() const ;
 };

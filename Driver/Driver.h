@@ -34,17 +34,18 @@ public:
 
 	void registerUser() override;
 	bool login() override;
-	void logout() override;
+	User* clone() const override;
 
 	void saveRegisteredUserToFile(const User& user, const char* fileName) override;
 	Vector<User*> loadRegisteredUserFromFile(const char* fileName) override;
 
+	void receiveMessage(const Message& message);
 	void changeAddress(const Address& address);
 	void checkMessages();
-	void acceptOrder(const Order& order);
-	void declineOrder(int id);
-	void finishOrder(int id);
-	void acceptPayment(int id, double amount);
+	void acceptOrder(unsigned int id);
+	void declineOrder(unsigned int id);
+	void finishOrder(unsigned int id);
+	void acceptPayment(unsigned int id, double amount);
 
 	void addRating(const Rating& rating);
 

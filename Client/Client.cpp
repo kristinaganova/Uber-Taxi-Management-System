@@ -8,12 +8,14 @@ Client::Client(const MyString& firstName, const MyString& lastName, const MyStri
 Client::Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password, double balance)
     : User(UserType::CLIENT, firstName, lastName, username, password) , balance(balance) {}
 
+Client::Client() : balance(0) {}
+
 void Client::setBalance(double balance)
 {
     this->balance = balance;
 }
 
-double Client::getbalance() const
+double Client::getBalance() const
 {
     return balance;
 }
@@ -124,9 +126,9 @@ bool Client::login()
     return false;
 }
 
-void Client::logout()
+User* Client::clone() const
 {
-    std::cout << "Logout successful!" << std::endl;
+    return new Client(*this);
 }
 
 void Client::placeOrder(const Address& address, const Address& destination, int numberOfPassengers, OrderManager& orders)
@@ -154,8 +156,6 @@ void Client::payOrder(Order& order, double amount)
     order.setPaymentAmount(amount);
     order.setPaymentStatus(PaymentStatus::Paid);
 }
-
-
 
 void Client::addMoney(double amount)
 {

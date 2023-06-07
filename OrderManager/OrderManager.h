@@ -10,6 +10,7 @@ class OrderManager
 	Vector<Order> orders;
 
 public:
+
 	void addOrder(const Order& order);
 	void removeOrder(unsigned int orderId);
 	Order* findOrderById(unsigned int orderId);
