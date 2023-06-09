@@ -6,7 +6,7 @@
 
 Driver::Driver(const MyString& firstName, const MyString& lastName, const MyString& username, 
                const MyString& password, const MyString& carNumber, const MyString& phoneNumber)
-       :User(UserType::DRIVER , firstName, lastName, username, password)
+       :User(UserType::DRIVER , firstName, lastName, username, password), orders(OrderManager::getInstance()) , messages(&MessageManager::getInstance())
 {
     setCarNumber(carNumber);
     setPhoneNumber(phoneNumber);
@@ -200,7 +200,7 @@ void Driver::changeAddress(const Address& address)
 
 void Driver::checkMessages()
 {   
-     messages->printAllMessages();
+     messages->printUnreadMessages();
 }
 
 void Driver::acceptOrder(unsigned int id)
@@ -243,6 +243,18 @@ void Driver::acceptPayment(unsigned int id, double amount)
 void Driver::addRating(const Rating& rating)
 {
     ratings.pushBack(rating);
+}
+
+void Driver::assignMessage(unsigned int messageID)
+{
+    MessageManager& messageManager = MessageManager::getInstance();
+
+    Message* message = messageManager.getMessageById(messageID);
+
+    if (message)
+    {
+        messages->addMessage(*message);
+    }
 }
 
 double Driver::getAverageRating() const
