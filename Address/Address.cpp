@@ -15,9 +15,19 @@ const MyString& Address::getAdditionalInfo() const
     return additionalInfo;
 }
 
+const Address::Point& Address::getPoint() const
+{
+    return point;
+}
+
 void Address::setName(const MyString& name)
 {
     this->name = name;
+}
+
+void Address::setPoint(const Point& point)
+{
+    this->point = point;
 }
 
 void Address::setAdditionalInfo(const MyString& additionalInfo)
