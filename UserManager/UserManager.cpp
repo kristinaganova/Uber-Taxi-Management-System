@@ -11,18 +11,10 @@ void UserManager::free()
     }
 }
 
-void UserManager::copyFrom(const UserManager& other)
+UserManager& UserManager::getInstance()
 {
-    for (size_t i = 0; i < other.users.getSize(); i++)
-    {
-        users.pushBack(other.users[i]->clone());
-    }
-}
-
-void UserManager::moveFrom(UserManager&& other)
-{
-    users = other.users;
-    other.users = Vector<User*>();
+    static UserManager instance;
+    return instance;
 }
 
 void UserManager::addUser(User* newUser)
@@ -37,34 +29,19 @@ UserManager::~UserManager()
 
 UserManager::UserManager() : users(Vector<User*>()) {}
 
-UserManager::UserManager(const UserManager& other)
+Vector<Driver*> UserManager ::getDrivers() const
 {
-    copyFrom(other);
-}
+    Vector<Driver*> drivers; 
 
-UserManager& UserManager::operator=(const UserManager& other)
-{
-    if (this != &other)
+    for (size_t i = 0; i < users.getSize(); i++)
     {
-        free();
-        copyFrom(other);
+        if (users[i]->getUserType() == UserType::DRIVER)
+        {
+            drivers.pushBack(static_cast<Driver*>(users[i]));
+        }
     }
-    return *this;
-}
 
-UserManager::UserManager(UserManager&& other) noexcept
-{
-    moveFrom(std::move(other));
-}
-
-UserManager& UserManager::operator=(UserManager&& other) noexcept
-{
-    if (this != &other)
-    {
-        free();
-        moveFrom(std::move(other));
-    }
-    return *this;
+    return drivers;
 }
 
 UserType UserManager::getTypeByIndex(unsigned int index) const
@@ -85,12 +62,21 @@ User* UserManager::findUserByUserName(const MyString& userName)
     return nullptr;
 }
 
+User* UserManager::findUserByName(const MyString& name)
+{
+    for (size_t i = 0; i < users.getSize(); i++)
+    {
+        if (users[i] && users[i]->getFirstName() == name)
+            return users[i];
+    }
+    return nullptr;
+}
 
-//void UserManager::rateDriver(const MyString& driverName, const Rating& rating)
-//{
-//    Driver* driver = (Driver*)findUserByName(driverName);
-//    driver->addRating(rating);
-//}
+void UserManager::rateDriver(const MyString& driverName, const Rating& rating)
+{
+    Driver* driver = static_cast<Driver*>(UserManager::findUserByUserName(driverName));
+    driver->addRating(rating);
+}
 
 void UserManager::saveAllRegisteredUserToFile(const char* fileName) const
 {
@@ -126,4 +112,3 @@ void UserManager::loadAllUsersFromFile()
     }
     driverRegisteredUsers.clear(); 
 }
-
