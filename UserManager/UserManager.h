@@ -1,30 +1,35 @@
 #pragma once
+
 #include "User.h"
 #include "Vector.hpp"
 
+class Driver;
+class Rating;
+
 class UserManager
 {
-	Vector<User*> users;
+    Vector<User*> users;
 
-	void free();
-	void copyFrom(const UserManager& other);
-	void moveFrom(UserManager&& other);
+    UserManager();
+
+    UserManager(const UserManager& other) = delete;
+    UserManager& operator=(const UserManager& other) = delete;
+
+    UserManager(UserManager&& other) noexcept = delete;
+    UserManager& operator=(UserManager&& other) noexcept = delete;
+
+    void free();
 public:
-	void addUser(User* newUser);
-	~UserManager();
-	UserManager();
+    static UserManager& getInstance();
+    void addUser(User* newUser);
+    ~UserManager();
 
-	UserManager(const UserManager& other);
-	UserManager& operator=(const UserManager& other);
+    void rateDriver(const MyString& driverName, const Rating& rating);
+    Vector<Driver*> getDrivers() const;
+    UserType getTypeByIndex(unsigned int index) const;
+    User* findUserByName(const MyString& name);
+    User* findUserByUserName(const MyString& userName);
 
-	UserManager(UserManager&& other) noexcept;
-	UserManager& operator=(UserManager&& other) noexcept;
-
-	UserType getTypeByIndex(unsigned int index) const;
-	User* findUserByUserName(const MyString& userName);
-	//void rateDriver(const MyString& driverName, const Rating& rating);
-
-	void saveAllRegisteredUserToFile(const char* fileName) const;
-	void loadAllUsersFromFile();
+    void saveAllRegisteredUserToFile(const char* fileName) const;
+    void loadAllUsersFromFile();
 };
-
