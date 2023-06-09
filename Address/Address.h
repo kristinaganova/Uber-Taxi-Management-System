@@ -32,8 +32,12 @@ public:
     
     const MyString& getAdditionalInfo() const;
 
+    const Point& getPoint() const;
+
     void setName(const MyString& name);
   
+    void setPoint(const Point& point);
+
     void setAdditionalInfo(const MyString& additionalInfo);
 
    friend std::ostream& operator<<(std::ostream& os, const Address& address);
