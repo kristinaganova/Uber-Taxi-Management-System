@@ -48,6 +48,7 @@ public:
 	void acceptPayment(unsigned int id, double amount);
 
 	void addRating(const Rating& rating);
+	void assignMessage(unsigned int messageID);
 
 	double getAverageRating() const;
 };
