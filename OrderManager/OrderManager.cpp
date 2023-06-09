@@ -1,4 +1,16 @@
 #include "OrderManager.h"
+#include "UserManager.h"
+
+OrderManager* OrderManager::instance = nullptr;
+
+OrderManager* OrderManager::getInstance()
+{
+	if (!instance) 
+	{
+		instance = new OrderManager();
+	}
+	return instance;
+}
 
 void OrderManager::addOrder(const Order& order)
 {
@@ -51,5 +63,29 @@ void OrderManager::printAllOrders() const
 	{
 		std::cout << "Order: " << orders[i].getId() << std::endl;
 		orders[i].printOrderDetails();
+	}
+}
+
+void  OrderManager::notifyDriversInRange(const Order& order)
+{
+	const Address& startAddress = order.getStartAddress();
+	const Vector<Driver*>& drivers = UserManager::getInstance().getDrivers(); 
+
+	for (int i = 0; i<drivers.getSize(); i++)
+	{
+		const Address& driverAddress = drivers[i]->getCurrentAddress();
+		double distance = startAddress.getPoint().getDist(driverAddress.getPoint());
+
+		if (distance <= 10)
+		{
+			MyString messageContent = "New order available: Order ID - " + MyString::valueOf(order.getId()) +
+				", Start Address - " + startAddress.getName() +
+				", Destination - " + order.getDestination().getName();
+
+			Message message(messageContent, MessageManager::getInstance().getNextId());
+			MessageManager::getInstance().addMessage(message);
+
+			drivers[i]->assignMessage(message.getId());
+		}
 	}
 }
