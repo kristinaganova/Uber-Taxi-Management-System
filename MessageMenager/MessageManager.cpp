@@ -1,5 +1,15 @@
 #include "MessageManager.h"
 
+unsigned int MessageManager::nextId = 1;
+
+MessageManager::MessageManager() = default;
+
+MessageManager& MessageManager::getInstance()
+{
+    static MessageManager instance;
+    return instance;
+}
+
 void MessageManager::addMessage(const Message& message)
 {
     messages.pushBack(message);
@@ -36,6 +46,7 @@ void MessageManager::deleteAllMessages()
 
 void MessageManager::printAllMessages() const
 {
+
     for (size_t i = 0; i < messages.getSize(); i++)
     {
         std::cout << "Message " << messages[i].getId() << std::endl;
@@ -54,4 +65,9 @@ Message* MessageManager::getMessageById(unsigned int messageId)
         }
     }
     return nullptr;
+}
+
+unsigned int MessageManager::getNextId() const
+{
+    return nextId++;
 }
