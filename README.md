@@ -1,9 +1,10 @@
-#Taxi Company Application Documentation
+# Taxi Company Application Documentation
+
 Welcome to the documentation for the Taxi Company Application, an simplified system for managing a taxi company. This application allows users to register as either clients or drivers, enabling them to perform various actions within the system. The application facilitates the process of ordering taxis, managing orders, tracking drivers, and handling payments.
 
 This documentation provides a comprehensive guide on how to use the Taxi Company Application, including user registration, login procedures, and the available functionalities for both clients and drivers. It also covers the underlying system architecture, data storage, and file management.
 
-#Table of Contents
+## Table of Contents
 1.Introduction
 2.System Overview
 3.User Registration
@@ -24,7 +25,7 @@ This documentation provides a comprehensive guide on how to use the Taxi Company
 7.System Architecture
 8.Conclusion
 
-#2. System Overview
+## 2. System Overview
 The Taxi Company Application is designed to streamline the operations of a taxi company by providing a simplified system for clients to order taxis and drivers to manage and fulfill those orders. The system consists of two main user roles: clients and drivers. Clients can register, log in, place orders, track order status, make payments, rate drivers, and add funds to their accounts. On the other hand, drivers can register, log in, update their current address, check messages (orders), accept or decline orders, mark orders as finished, and accept payments.
 
 The core functionality of the system revolves around the process of ordering a taxi. When a client places an order, the system sends a notification to available drivers, starting with the one closest to the pickup address. Once a driver accepts the order, the client is notified, and the system generates a unique order ID for reference. The client can then track the status of their order, including details about the assigned driver, their vehicle information, contact number, and estimated arrival time.
@@ -33,7 +34,7 @@ In addition to order management, the system also handles payment transactions. C
 
 The Taxi Company Application emphasizes simplicity and efficiency, aiming to provide a seamless experience for both clients and drivers. By automating the order process and integrating payment management, the application helps optimize taxi services, enhance customer satisfaction, and improve overall operational effectiveness.
 
-#3. User Registration
+## 3. User Registration
 To access the features and functionalities of the Taxi Company Application, users need to register an account. The application supports two types of users: clients and drivers. The registration process allows users to create a unique username and password combination, along with providing relevant personal and contact information.
 
 3.1 Client Registration
@@ -66,7 +67,7 @@ Once the registration process is complete, drivers can log in using their chosen
 
 User registration is a one-time process that allows clients and drivers to utilize the full functionality of the Taxi Company Application. By registering, users can benefit from features such as placing orders, tracking order status, making payments, and managing their profiles.
 
-#4. User Login and Logout
+## 4. User Login and Logout
 The Taxi Company Application provides a secure login system that allows registered users to access their accounts and utilize the features of the application. Users can log in using their chosen username and password, and they can also log out to securely exit the application without ending its functionality.
 
 4.1 User Login
@@ -89,7 +90,7 @@ It is important for users to log out of the application after each session, espe
 
 By providing a reliable login and logout system, the Taxi Company Application maintains a safe and controlled user environment, enabling clients and drivers to access the application's features conveniently while maintaining the confidentiality of their accounts.
 
-#5. Client Functionalities
+## 5. Client Functionalities
 The Taxi Company Application offers a range of convenient features for clients, allowing them to seamlessly book and manage taxi rides. This section outlines the various functionalities available to clients within the application.
 
 5.1 Ordering a Taxi
@@ -142,7 +143,7 @@ Clients can conveniently add funds to their account balance, which can be used t
 
 By offering these client functionalities, the Taxi Company Application ensures a user-friendly experience for clients, providing them with the tools to effortlessly order taxis, track their orders, manage payments, rate drivers, and maintain adequate funds in their accounts.
 
-#6. Driver Functionalities
+## 6. Driver Functionalities
 The Taxi Company Application offers a range of functionalities for drivers, enabling them to efficiently handle taxi requests and provide excellent service to clients. This section outlines the various functionalities available to drivers within the application.
 
 6.1 Changing Current Address
@@ -186,7 +187,7 @@ By accepting payments, drivers can keep track of their earnings and ensure accur
 
 With these driver functionalities, the Taxi Company Application empowers drivers to efficiently handle ride requests, manage their addresses, track messages, accept or decline orders, mark rides as finished, and record payments. These features contribute to a seamless experience for both drivers and clients.
 
-#7.System Architecture
+# 7.System Architecture
 
 The main classes in the system are:
 
@@ -214,6 +215,6 @@ ClientMenuHandler: Inherits from MenuHandler and provides menu handling function
 
 DriverMenuHandler: Inherits from MenuHandler and provides menu handling functionality for drivers. It includes functions for accepting or declining orders, changing address, and managing messages.
 
-#9. Conclusion
+## 9. Conclusion
 
 Overall, this software system provides a solid foundation for efficiently managing transportation services, enhancing user experience, and facilitating seamless communication between clients and drivers. By incorporating these classes and their functionalities, the system aims to streamline order placement, tracking, and communication processes, ultimately improving the overall service quality.
