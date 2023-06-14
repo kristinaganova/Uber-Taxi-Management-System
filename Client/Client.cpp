@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include "SharedPtr.hpp"
+#include "UserManager.h"
 
 Client::Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password)
     : User(UserType::CLIENT, firstName, lastName, username, password), balance(0) {}
@@ -146,6 +147,23 @@ void Client::cancelOrder(OrderManager& orders, unsigned int orderId)
     orders.removeOrder(orderId);
     SharedPtr<Driver> driver = orders.findOrderById(orderId)->getDriver();
     driver->getMessages()->addMessage(Message("Your order has been accepted" + driver->getFirstName(), driver->getMessages()->getNextId()));
+}
+
+void Client::rateDriver(const MyString& name,  int rating)
+{
+    UserManager& users = UserManager::getInstance();
+    Driver* driver = static_cast<Driver*>(users.findUserByName(name));
+
+    if (driver)
+    {
+        Rating r(rating, this);
+        driver->addRating(r);
+        std::cout << "Driver " << driver->getFirstName() << " rated successfully." << std::endl;
+    }
+    else
+    {
+        std::cout << "Driver not found. Unable to rate." << std::endl;
+    }
 }
 
 void Client::payOrder(Order& order, double amount)
