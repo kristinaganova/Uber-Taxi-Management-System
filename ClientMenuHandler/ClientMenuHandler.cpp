@@ -47,11 +47,24 @@ void ClientMenuHandler::handleMenu()
             break;
         }
         case 4:
+        {
             client->checkMessages();
-            break;  
-        case 5:
             break;
+        }
+        case 5:
+        {
+            MyString name;
+            int rating;
+            std::cout << "Enter name of the driver: " << std::endl;
+            std::cin >> name;
+            std::cout << "Enter rating from 1 to 5: " << std::endl;
+            std::cin >> rating;
+            client->rateDriver(name, rating);
+            std::cout << "Rating set successfully! " << std::endl;
+            break;
+        }
         case 6:
+        {
             double amount;
             std::cout << "Enter amount of money to add: " << std::endl;
             std::cin >> amount;
@@ -59,16 +72,21 @@ void ClientMenuHandler::handleMenu()
             std::cout << "Money added successfully! " << std::endl;
             std::cout << "Your balance is " << client->getBalance() << std::endl;
             break;
+        }
         case 7:
+        {
             loggedInUser->logout();
-            loggedInUser.release();
-            exitMenu = true; 
+            exitMenu = true;
             break;
+        }
         default:
+        {
             std::cout << "Invalid option. Please try again." << std::endl;
             break;
         }
+        }
     }
+    loggedInUser.release();
 }
 
 int ClientMenuHandler::displayMenu() const
