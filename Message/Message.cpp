@@ -2,12 +2,28 @@
 
 Message::Message(const MyString& content, unsigned int id) : content(content), id(id) {}
 
+Message::Message(const MyString& content, const SharedPtr<User>& sender, const SharedPtr<User>& receiver, unsigned int id)
+    : content(content), sender(sender), receiver(receiver), id(id)
+{
+    read = false;
+}
+
 Message::Message() : Message("", 0) {}
 
 const MyString& Message::getContent() const
 {
     markAsRead();
     return content;
+}
+
+const SharedPtr<User>& Message::getSender() const
+{
+    return sender;
+}
+
+const SharedPtr<User>& Message::getReceiver() const
+{
+    return receiver;
 }
 
 unsigned int Message::getId() const

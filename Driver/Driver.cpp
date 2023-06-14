@@ -3,10 +3,11 @@
 #include "helpers.h"
 #include <fstream>
 #include "UniquePtr.hpp"
+#include "OrderNotificationCenter.h"
 
 Driver::Driver(const MyString& firstName, const MyString& lastName, const MyString& username, 
                const MyString& password, const MyString& carNumber, const MyString& phoneNumber)
-       :User(UserType::DRIVER , firstName, lastName, username, password), orders(OrderManager::getInstance()) , messages(&MessageManager::getInstance())
+      :User(UserType::DRIVER , firstName, lastName, username, password), orders(OrderManager::getInstance())
 {
     setCarNumber(carNumber);
     setPhoneNumber(phoneNumber);
@@ -91,33 +92,9 @@ void Driver::registerUser()
     std::cout << "Registration successful. Welcome, " << firstName << "!" << std::endl;
 }
 
-bool Driver::login()
-{
-    const char* fileName = "driverUsers.txt";
-    Vector<User*> registeredUsers = loadRegisteredUserFromFile(fileName);
-
-    MyString username, password;
-    std::cout << "Enter your username: ";
-    std::cin >> username;
-    std::cout << "Enter your password: ";
-    std::cin >> password;
-
-    for (int i = 0; i < registeredUsers.getSize(); i++)
-    {
-        if ((*registeredUsers[i]).getUsername() == username && (*registeredUsers[i]).getPassword() == password)
-        {
-            std::cout << "Welcome, " << (*registeredUsers[i]).getFirstName() << "!\n";
-            return true;
-        }
-    }
-
-    std::cout << "Invalid username or password!\n";
-    return false;
-}
-
 User* Driver::clone() const
 {
-    return new Driver(*this);
+    return new Driver(firstName, lastName, username, password, carNumber, phoneNumber);
 }
 
 void Driver::saveRegisteredUserToFile(const User& user, const char* fileName) 
@@ -209,6 +186,9 @@ void Driver::acceptOrder(unsigned int id)
     if (foundOrder) 
     {
         foundOrder->setStatus(Status::Accepted);
+        foundOrder->setDriver(this);
+        Message message(("The order is accepted by: " + this->getFirstName()), foundOrder->getClient()->getMessages()->getNextId());
+        foundOrder->getClient()->getMessages()->addMessage(message);
     }
 }
 
@@ -218,26 +198,32 @@ void Driver::declineOrder(unsigned int id)
     if (foundOrder)
     {
         foundOrder->setStatus(Status::Canceled);
+        std::cout << "Order declined successfully" << std::endl;
     }
 }
 
-void Driver::finishOrder(unsigned int id)
+void Driver::finishOrder(unsigned int id, double amountToBePaid)
 {
     Order* foundOrder = orders->findOrderById(id);
-    if (foundOrder)
-    {
-        foundOrder->setStatus(Status::Completed);
-    }
-}
 
-void Driver::acceptPayment(unsigned int id, double amount)
-{
-    Order* foundOrder = orders->findOrderById(id);
-    if (foundOrder) 
+    if (!foundOrder)
     {
-        foundOrder->setPaymentAmount(amount);
-        foundOrder->setPaymentStatus(PaymentStatus::Paid);
+        std::cout << "The order was not found" << std::endl;
+        return;
     }
+
+    foundOrder->setStatus(Status::Completed);
+    foundOrder->setPaymentAmount(amountToBePaid);
+
+    SharedPtr<Client> client = foundOrder->getClient();
+    client->payOrder(*foundOrder, amountToBePaid);
+
+    Message message(("You paid " + MyString::valueOf(amountToBePaid)), client->getMessages()->getNextId());
+    client->getMessages()->addMessage(message);
+
+    foundOrder->setPaymentStatus(PaymentStatus::Paid);
+
+    std::cout << "Order finished successfully!" << std::endl;
 }
 
 void Driver::addRating(const Rating& rating)
@@ -247,9 +233,7 @@ void Driver::addRating(const Rating& rating)
 
 void Driver::assignMessage(unsigned int messageID)
 {
-    MessageManager& messageManager = MessageManager::getInstance();
-
-    Message* message = messageManager.getMessageById(messageID);
+    Message* message = messages->getMessageById(messageID);
 
     if (message)
     {

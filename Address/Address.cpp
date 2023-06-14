@@ -37,20 +37,17 @@ void Address::setAdditionalInfo(const MyString& additionalInfo)
 
 std::ostream& operator<<(std::ostream& os, const Address& address)
 {
-    os << "Name: " << address.name << "\n";
-    os << "Coordinates: (" << address.point.x << ", " << address.point.y << ")\n";
-    os << "Additional Info: " << address.additionalInfo << "\n";
+    os << address.name << " ";
+    os << address.point.x << ", " << address.point.y << " ";
+    os << address.additionalInfo << " ";
     return os;
 }
 
 std::istream& operator>>(std::istream& is, Address& address)
 {
-    std::cout << "Address name: " << std::endl;
     is >> address.name;
-    std::cout << "Address coordinates: " << std::endl;
     is >> address.point.x;
     is >> address.point.y;
-    std::cout << "Additional information: " << std::endl;
     is >> address.additionalInfo;
 
     return is;

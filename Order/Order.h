@@ -70,6 +70,6 @@ public:
 	void setClient(SharedPtr<Client> client);
 	void setDriver(SharedPtr<Driver> driver);
 
-	//void saveOrderToFile(const Order& order, const char* fileName);
+    void saveOrderToFile(const Order& order, const char* fileName);
 	void printOrderDetails() const;
 };

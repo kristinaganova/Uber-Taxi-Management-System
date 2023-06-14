@@ -19,4 +19,7 @@ public:
 	Vector<Order> getOrdersByStatus(Status status);
 	void printAllOrders() const;
 	void notifyDriversInRange(const Order& order);
+	void saveAllOrdersMadeInFile(const char* fileName) const;
+	void saveAllUnfinishedOrdersInFile(const char* fileName) const;
+	void loadAllUnfinishedOrdersFromFile(const char* fileName);
 };

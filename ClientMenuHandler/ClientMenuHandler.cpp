@@ -1,5 +1,8 @@
 #include "ClientMenuHandler.h"
 
+ClientMenuHandler::ClientMenuHandler(UniquePointer<User> user, OrderManager& orderMgr)
+    : loggedInUser(std::move(user)), orderManager(orderMgr) {}
+
 void ClientMenuHandler::handleMenu()
 {
     Client* client = static_cast<Client*>(loggedInUser.get());
@@ -44,12 +47,22 @@ void ClientMenuHandler::handleMenu()
             break;
         }
         case 4:
-            // handle rateDriver()
-            break;
+            client->checkMessages();
+            break;  
         case 5:
+            break;
+        case 6:
+            double amount;
+            std::cout << "Enter amount of money to add: " << std::endl;
+            std::cin >> amount;
+            client->addMoney(amount);
+            std::cout << "Money added successfully! " << std::endl;
+            std::cout << "Your balance is " << client->getBalance() << std::endl;
+            break;
+        case 7:
             loggedInUser->logout();
             loggedInUser.release();
-            exitMenu = true; // Set the flag to exit the loop
+            exitMenu = true; 
             break;
         default:
             std::cout << "Invalid option. Please try again." << std::endl;
@@ -65,8 +78,10 @@ int ClientMenuHandler::displayMenu() const
     std::cout << "1. Place Order" << std::endl;
     std::cout << "2. Check Order" << std::endl;
     std::cout << "3. Cancel Order" << std::endl;
-    std::cout << "4. Rate Driver" << std::endl;
-    std::cout << "5. Logout" << std::endl;
+    std::cout << "4. Check messages" << std::endl;
+    std::cout << "5. Rate Driver" << std::endl;
+    std::cout << "6. Add money" << std::endl;
+    std::cout << "7. Logout" << std::endl;
     std::cout << "Enter your choice: ";
     std::cin >> choice;
     return choice;

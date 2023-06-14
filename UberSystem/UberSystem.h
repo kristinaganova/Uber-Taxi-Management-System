@@ -4,12 +4,13 @@
 #include "UserManager.h"
 #include "User.h"
 #include "UniquePtr.hpp"
+#include "MenuHandler.h"
 
 class UberSystem
 {
-    OrderManager orderManager;
-    MessageManager messageManager;
-    UserManager users;
+    UniquePointer<UserManager> users;
+    UniquePointer<OrderManager> orderManager;
+    UniquePointer<MessageManager> messageManager;
     UniquePointer<User> loggedInUser;
 
 public:
@@ -17,13 +18,9 @@ public:
 
     void run();
     int displayMainMenu();
-    int displayClientMenu();
-    int displayDriverMenu();
-
-    void handleDriverMenu();
-    void handleClientMenu();
 
     //for all
     void login();
     void registerUser();    
+    void handleMenu(MenuHandler& menuHandler);
 };       

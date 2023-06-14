@@ -142,28 +142,46 @@ void Order::setDriver(SharedPtr<Driver> driver)
         this->driver = nullptr;
 }
 
-//void Order::saveOrderToFile(const Order& order, const char* fileName)
-//{
-//    std::ofstream file(fileName, std::ios::app);
-//    if (!file.is_open())
-//    {
-//        std::cout << "Error: Unable to open file " << fileName << " for writing." << std::endl;
-//        return;
-//    }
-//
-//    if (order.getStatus() == Status::Completed)
-//    {
-//        file << order.getId() << " ";
-//        file << order.getStartAddress() << " ";
-//        file << order.getDestination() << " ";
-//        file << order.getPassengerCount() << " ";
-//        file << order.getPaymentAmount() << " ";
-//        file << order.getClient() << " ";
-//        file << order.getDriver() << " ";
-//    }
-//
-//    file.close();
-//}
+void Order::saveOrderToFile(const Order& order, const char* fileName)
+{
+    std::ofstream file(fileName, std::ios::app);
+    if (!file.is_open())
+    {
+        std::cout << "Error: Unable to open file " << fileName << " for writing." << std::endl;
+        return;
+    }
+
+    if (order.getStatus() == Status::Completed)
+    {
+        file << order.getId() << " ";
+        file << order.getStartAddress() << " ";
+        file << order.getDestination() << " ";
+        file << order.getPassengerCount() << " ";
+        file << order.getPaymentAmount() << " ";
+
+        if (order.getClient())
+        {
+            file << order.getClient()->getUsername() << " ";
+        }
+        else
+        {
+            file << "NULL ";
+        }
+
+        if (order.getDriver())
+        {
+            file << order.getDriver()->getUsername() << " ";
+        }
+        else
+        {
+            file << "NULL ";
+        }
+
+        file << std::endl;
+    }
+
+    file.close();
+}
 
 void Order::printOrderDetails() const
 {

@@ -16,7 +16,6 @@ class Driver : public User
 	MyString carNumber;
 	MyString phoneNumber;
 	Address currentAddress;
-	SharedPtr<MessageManager> messages;
 	SharedPtr<OrderManager> orders;
 	Vector<Rating> ratings;
 
@@ -33,7 +32,6 @@ public:
 	void setPhoneNumber(const MyString& phoneNumber);
 
 	void registerUser() override;
-	bool login() override;
 	User* clone() const override;
 
 	void saveRegisteredUserToFile(const User& user, const char* fileName) override;
@@ -44,8 +42,7 @@ public:
 	void checkMessages();
 	void acceptOrder(unsigned int id);
 	void declineOrder(unsigned int id);
-	void finishOrder(unsigned int id);
-	void acceptPayment(unsigned int id, double amount);
+	void finishOrder(unsigned int id, double amountToBePaid);
 
 	void addRating(const Rating& rating);
 	void assignMessage(unsigned int messageID);

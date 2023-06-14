@@ -15,8 +15,7 @@ class Client : public User
 	double balance;
 public:
 	Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password);
-	Client(const MyString& firstName, const MyString& lastName, 
-		   const MyString& username, const MyString& password, double balance);
+	Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password, double balance);
 	Client();
 
 	void setBalance(double balance);
@@ -27,9 +26,9 @@ public:
 	Vector<User*> loadRegisteredUserFromFile(const char* fileName) override;
 
 	void registerUser() override;
-	bool login() override;
 	User* clone() const override;
 
+	void checkMessages();
 	void placeOrder(const Address& address, const Address& destination, int numberOfPassengers, OrderManager& orders);
 	Status checkOrderStatus(OrderManager& orders, unsigned int id);
 	void cancelOrder(OrderManager& orders, unsigned int orderId);

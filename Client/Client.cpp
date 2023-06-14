@@ -1,6 +1,8 @@
 #include "Client.h"
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include "SharedPtr.hpp"
 
 Client::Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password)
     : User(UserType::CLIENT, firstName, lastName, username, password), balance(0) {}
@@ -65,8 +67,19 @@ Vector<User*> Client::loadRegisteredUserFromFile(const char* fileName)
      
         if (userTypeChar == 'C')
         {
-            Client* client = new Client(firstName, lastName, username, password);
+            double balance;
+            file >> balance;
+            Client* client = new Client(firstName, lastName, username, password, balance);
             registeredUsers.pushBack(client);
+        }
+        else if(userTypeChar == 'D')
+        {
+            MyString carNumber;
+            file >> carNumber;
+            MyString phoneNumber;
+            file >> phoneNumber;
+            Driver* driver = new Driver(firstName, lastName, username, password, carNumber, phoneNumber);
+            registeredUsers.pushBack(driver);
         }
         else
         {
@@ -102,40 +115,22 @@ void Client::registerUser()
     std::cout << "Registration successful. Welcome, " << firstName << "!" << std::endl;
 }
 
-bool Client::login()
-{
-    const char* fileName = "clientUsers.txt";
-    Vector<User*> registeredUsers = loadRegisteredUserFromFile(fileName);
-
-    MyString username, password;
-    std::cout << "Enter your username: ";
-    std::cin >> username;
-    std::cout << "Enter your password: ";
-    std::cin >> password;
-
-    for (int i = 0; i < registeredUsers.getSize(); i++)
-    {
-        if ((*registeredUsers[i]).getUsername() == username && (*registeredUsers[i]).getPassword() == password)
-        {
-            std::cout << "Welcome, " << (*registeredUsers[i]).getFirstName() << "!\n";
-            return true;
-        }
-    }
-
-    std::cout << "Invalid username or password!\n";
-    return false;
-}
-
 User* Client::clone() const
 {
-    return new Client(*this);
+    return new Client(firstName, lastName, username, password, balance);
+}
+
+void Client::checkMessages()
+{
+    messages->printUnreadMessages();
 }
 
 void Client::placeOrder(const Address& address, const Address& destination, int numberOfPassengers, OrderManager& orders)
 {
     Order newOrder(address, destination, numberOfPassengers);
-
+    newOrder.setClient(this);
     orders.addOrder(newOrder);
+    orders.notifyDriversInRange(newOrder);
 
     std::cout << "Order placed successfully. Order ID: " << newOrder.getId() << std::endl;
 }
@@ -149,12 +144,15 @@ Status Client::checkOrderStatus(OrderManager& orders, unsigned int id)
 void Client::cancelOrder(OrderManager& orders, unsigned int orderId)
 {
     orders.removeOrder(orderId);
+    SharedPtr<Driver> driver = orders.findOrderById(orderId)->getDriver();
+    driver->getMessages()->addMessage(Message("Your order has been accepted" + driver->getFirstName(), driver->getMessages()->getNextId()));
 }
 
 void Client::payOrder(Order& order, double amount)
 {
     order.setPaymentAmount(amount);
     order.setPaymentStatus(PaymentStatus::Paid);
+    balance -= amount;
 }
 
 void Client::addMoney(double amount)

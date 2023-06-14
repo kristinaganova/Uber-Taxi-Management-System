@@ -11,9 +11,7 @@ private:
     MessageManager& messageManager;
 
 public:
-    DriverMenuHandler(UniquePointer<User> user, MessageManager& messageMgr)
-        : loggedInUser(std::move(user)), messageManager(messageMgr) {}
-
+    DriverMenuHandler(UniquePointer<User> user, MessageManager& messageMgr);
     void handleMenu() override;
     int displayMenu() const override;
 };

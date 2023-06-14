@@ -3,6 +3,8 @@
 #include "User.h"
 #include "SharedPtr.hpp"
 
+class User;
+
 class Message
 {
     static int nextId;

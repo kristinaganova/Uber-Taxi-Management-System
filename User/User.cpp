@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cstring>
 #include "helpers.h"
+#include "MessageManager.h"
 
 User::User(UserType type, const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password)
      : type(type)
@@ -12,6 +13,7 @@ User::User(UserType type, const MyString& firstName, const MyString& lastName, c
     setLastName(lastName);
     setUsername(username);
     setPassword(password);
+    initializeMessageStore();
 }
 
 const UserType& User::getUserType() const
@@ -34,9 +36,9 @@ const MyString& User::getUsername() const
 	return username;
 }
 
-const MyString& User::getPassword() const
+UniquePointer<MessageStore>& User::getMessages()
 {
-    return password;
+    return messages;
 }
 
 void User::setType(const UserType& type)
@@ -80,6 +82,11 @@ void User::setPassword(const MyString& password)
     this->password = password;
 }
 
+void User::initializeMessageStore()
+{
+    messages = UniquePointer<MessageStore>(new MessageStore());
+}
+
 void User::saveRegisteredUserToFile(const User& user, const char* fileName)
 {
     std::ofstream file(fileName, std::ios::app);
@@ -95,4 +102,23 @@ void User::saveRegisteredUserToFile(const User& user, const char* fileName)
         << user.password << std::endl;
 
     file.close();
+}
+
+void User::sendMessage(const SharedPtr<User>& receiver, const MyString& content)
+{
+    MessageManager::getInstance().sendMessage(this, receiver, content);
+}
+
+void User::logout()
+{
+    std::cout << "Logged out successfully!" << std::endl;
+}
+
+bool User::login(const MyString& username, const MyString& password)
+{
+    if (this->username == username && this->password == password)
+    {
+        return true;
+    }
+    return false;
 }

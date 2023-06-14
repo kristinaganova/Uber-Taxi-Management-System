@@ -107,8 +107,7 @@ void UserManager::loadAllUsersFromFile()
     for (size_t i = 0; i < driverRegisteredUsers.getSize(); i++)
     {
         User* user = driverRegisteredUsers[i]->clone();
-        users.pushBack(user);
-        delete driverRegisteredUsers[i]; 
+        users.pushBack(user); 
     }
     driverRegisteredUsers.clear(); 
 }

@@ -1,4 +1,8 @@
+#include "User.h"
 #include "MessageManager.h"
+
+class User;
+class UserManager;
 
 unsigned int MessageManager::nextId = 1;
 
@@ -10,64 +14,33 @@ MessageManager& MessageManager::getInstance()
     return instance;
 }
 
-void MessageManager::addMessage(const Message& message)
+void MessageManager::addUserMessageStore(const MessageStore& store)
 {
-    messages.pushBack(message);
+    stores.pushBack(store);
 }
 
-void MessageManager::printUnreadMessages() const
+UniquePointer<MessageStore>& MessageManager::getUserMessageStore(SharedPtr<User> userStore)
 {
-    for (size_t i = 0; i < messages.getSize(); i++)
-    {
-        if (!messages[i].isRead())
-        {
-            std::cout << messages[i].getContent() << std::endl;
-            messages[i].markAsRead();
-        }
-    }
+     return userStore->getMessages();
 }
 
-void MessageManager::removeMessage(unsigned int messageId)
+const Vector<MessageStore>& MessageManager::getMessageStores() const
 {
-    for (size_t i = 0; i < messages.getSize(); i++)
-    {
-        if (messages[i].getId() == messageId)
-        {
-            messages.popAt(i);
-            break;
-        }
-    }
+    return stores;
 }
 
-void MessageManager::deleteAllMessages()
+void MessageManager::sendMessage(SharedPtr<User> sender, SharedPtr<User> receiver, const MyString& content)
 {
-    messages.clear();
-}
+    unsigned int messageId = getNextId();
+    Message message(content, sender, receiver, messageId);
 
-void MessageManager::printAllMessages() const
-{
+    UniquePointer<MessageStore>& receiverMessageStore = getUserMessageStore(receiver);
+    receiverMessageStore->addMessage(message);
 
-    for (size_t i = 0; i < messages.getSize(); i++)
-    {
-        std::cout << "Message " << messages[i].getId() << std::endl;
-        std::cout << messages[i].getContent() << std::endl;
-        messages[i].markAsRead();
-    }
-}
-
-Message* MessageManager::getMessageById(unsigned int messageId)
-{
-    for (size_t i = 0; i < messages.getSize(); i++)
-    {
-        if (messages[i].getId() == messageId)
-        {
-            return &messages[i];
-        }
-    }
-    return nullptr;
+    std::cout << "New message from " << sender->getUsername() << " to " << receiver->getUsername() << std::endl;
 }
 
 unsigned int MessageManager::getNextId() const
 {
-    return nextId++;
+   return nextId++;
 }

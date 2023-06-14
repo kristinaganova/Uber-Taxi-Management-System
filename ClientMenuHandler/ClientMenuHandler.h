@@ -10,8 +10,7 @@ private:
     OrderManager& orderManager;
 
 public:
-    ClientMenuHandler(UniquePointer<User> user, OrderManager& orderMgr)
-        : loggedInUser(std::move(user)), orderManager(orderMgr) {}
+    ClientMenuHandler(UniquePointer<User> user, OrderManager& orderMgr);
 
     void handleMenu() override;
     int displayMenu() const override;

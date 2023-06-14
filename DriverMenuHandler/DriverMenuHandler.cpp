@@ -1,6 +1,9 @@
 #include "DriverMenuHandler.h"
 #include "Driver.h"
 
+DriverMenuHandler::DriverMenuHandler(UniquePointer<User> user, MessageManager& messageMgr) 
+    : loggedInUser(std::move(user)), messageManager(messageMgr) {}
+
 void DriverMenuHandler::handleMenu()
 {
     Driver* driver = static_cast<Driver*>(loggedInUser.get());
@@ -44,7 +47,10 @@ void DriverMenuHandler::handleMenu()
             std::cout << "Enter order id you finished: " << std::endl;
             unsigned int orderId;
             std::cin >> orderId;
-            driver->finishOrder(orderId);
+            std::cout << "Enter payment amount: " << std::endl;
+            double paymentAmount;
+            std::cin >> paymentAmount;
+            driver->finishOrder(orderId, paymentAmount);
             break;
         }
         case 6:
