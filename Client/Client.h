@@ -32,6 +32,7 @@ public:
 	void placeOrder(const Address& address, const Address& destination, int numberOfPassengers, OrderManager& orders);
 	Status checkOrderStatus(OrderManager& orders, unsigned int id);
 	void cancelOrder(OrderManager& orders, unsigned int orderId);
+	void rateDriver(const MyString& name,  int rating);
 	void payOrder(Order& order, double amount);
 	void addMoney(double amount);
 };
