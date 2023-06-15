@@ -84,6 +84,12 @@ int UberSystem::displayMainMenu()
     std::cout << "3. Exit" << std::endl;
     std::cout << "Enter your choice: ";
     std::cin >> choice;
+    while (!(std::cin >> choice)) 
+    {
+        std::cin.clear();               
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+        std::cout << "Invalid input. Please try again: ";
+    }
     return choice;
 }
 
