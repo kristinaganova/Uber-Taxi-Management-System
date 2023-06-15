@@ -37,6 +37,7 @@ void UberSystem::run()
                 registerUser();
                 break;
             case 3:
+                exitFunction();
                 std::cout << "Exiting the Uber System..." << std::endl;
                 return;
             default:
@@ -72,7 +73,6 @@ void UberSystem::run()
             }
         }
     }
-    exitFunction();
 }
 
 int UberSystem::displayMainMenu()
@@ -83,13 +83,14 @@ int UberSystem::displayMainMenu()
     std::cout << "2. Register" << std::endl;
     std::cout << "3. Exit" << std::endl;
     std::cout << "Enter your choice: ";
-    std::cin >> choice;
+
     while (!(std::cin >> choice)) 
     {
         std::cin.clear();               
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
         std::cout << "Invalid input. Please try again: ";
     }
+
     return choice;
 }
 

@@ -35,6 +35,23 @@ void Address::setAdditionalInfo(const MyString& additionalInfo)
     this->additionalInfo = additionalInfo;
 }
 
+void Address::enterAddressDetails()
+{
+    std::cout << "Enter address details:" << std::endl;
+
+    std::cout << "Name: ";
+    std::cin >> name;
+
+    std::cout << "Latitude: ";
+    std::cin >> point.x;
+
+    std::cout << "Longitude: ";
+    std::cin >> point.y;
+
+    std::cout << "Additional information: ";
+    std::cin >> additionalInfo;
+}
+
 std::ostream& operator<<(std::ostream& os, const Address& address)
 {
     os << address.name << " ";

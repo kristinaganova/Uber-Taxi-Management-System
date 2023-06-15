@@ -19,7 +19,7 @@ protected:
             return sqrt(dx * dx + dy * dy);
         }
     };
-private :
+private:
     MyString name;
     Point point;
     MyString additionalInfo;
@@ -39,6 +39,8 @@ public:
     void setPoint(const Point& point);
 
     void setAdditionalInfo(const MyString& additionalInfo);
+
+    void enterAddressDetails();
 
    friend std::ostream& operator<<(std::ostream& os, const Address& address);
    friend std::istream& operator>>(std::istream& os, Address& address);

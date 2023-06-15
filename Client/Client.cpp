@@ -4,6 +4,74 @@
 #include <memory>
 #include "SharedPtr.hpp"
 #include "UserManager.h"
+#include <sstream>
+
+namespace
+{
+    MyString readLine(std::ifstream& file)
+    {
+        std::string buffer;
+        std::getline(file, buffer);
+        return MyString(buffer.c_str());
+    }
+
+    void replaceBalanceInFile(const MyString& name, double newBalance, const MyString& filename)
+    {
+        std::ifstream file(filename.c_str());
+        if (!file.is_open())
+        {
+            std::cout << "Error while opening the file!" << std::endl;
+            return;
+        }
+
+        MyString line;
+        MyString temp = name + " ";
+
+        std::stringstream updatedLines;
+
+        while (!file.eof())
+        {
+            line = readLine(file);
+
+            if (line.substr(1, temp.length()) == temp)
+            {
+                MyString token;
+                std::stringstream ss(line.c_str());
+                while (ss >> token)
+                {
+                    if (token == name)
+                    {
+                        ss >> token;
+                        updatedLines << name << " " << newBalance;
+                        break;
+                    }
+                    else
+                    {
+                        updatedLines << token << " ";
+                    }
+                }
+            }
+            else
+            {
+                updatedLines << line;
+            }
+
+            updatedLines << std::endl;
+        }
+
+        file.close();
+
+        std::ofstream outFile(filename.c_str());
+        if (!outFile.is_open())
+        {
+            std::cout << "Error while opening the file!" << std::endl;
+            return;
+        }
+
+        outFile << updatedLines.str();
+        outFile.close();
+    }
+}
 
 Client::Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password)
     : User(UserType::CLIENT, firstName, lastName, username, password), balance(0) {}
@@ -31,12 +99,13 @@ void Client::saveRegisteredUserToFile(const User& user, const char* fileName)
         std::cout << "Error: Unable to open file " << fileName << " for writing." << std::endl;
         return;
     }
-    const Client& driver = (const Client&)(user);
+    const Client& driver = static_cast<const Client&>(user);
     file << "C" << " ";
     file << driver.firstName << " ";
     file << driver.lastName << " ";
     file << driver.username << " ";
     file << driver.password << " ";
+    file << driver.balance << " ";
     file << std::endl;
 
     file.close();
@@ -144,9 +213,13 @@ Status Client::checkOrderStatus(OrderManager& orders, unsigned int id)
 
 void Client::cancelOrder(OrderManager& orders, unsigned int orderId)
 {
+    if(orders.findOrderById(orderId)->getStatus() == Status::Accepted)
+    {
+        SharedPtr<Driver> driver = orders.findOrderById(orderId)->getDriver();
+        driver->getMessages()->addMessage(Message("Your order has been accepted" + driver->getFirstName(), driver->getMessages()->getNextId()));
+    }
+   
     orders.removeOrder(orderId);
-    SharedPtr<Driver> driver = orders.findOrderById(orderId)->getDriver();
-    driver->getMessages()->addMessage(Message("Your order has been accepted" + driver->getFirstName(), driver->getMessages()->getNextId()));
 }
 
 void Client::rateDriver(const MyString& name,  int rating)
@@ -176,4 +249,5 @@ void Client::payOrder(Order& order, double amount)
 void Client::addMoney(double amount)
 {
     balance += amount;
+    replaceBalanceInFile(getFirstName(), balance, "ClientUsers.txt");
 }

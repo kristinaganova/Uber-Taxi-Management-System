@@ -7,7 +7,7 @@
 
 Driver::Driver(const MyString& firstName, const MyString& lastName, const MyString& username, 
                const MyString& password, const MyString& carNumber, const MyString& phoneNumber)
-      :User(UserType::DRIVER , firstName, lastName, username, password), orders(OrderManager::getInstance())
+      :User(UserType::DRIVER , firstName, lastName, username, password), orders(OrderManager::getInstance()), ratings()
 {
     setCarNumber(carNumber);
     setPhoneNumber(phoneNumber);
