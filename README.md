@@ -1,4 +1,4 @@
-**Taxi Company Application Documentation**
+*Taxi Company Application Documentation*
 
 **Introduction**
 The Taxi Company Application is a simplified system for managing a taxi company. It allows users to register as clients or drivers and perform various actions within the system, such as ordering taxis, managing orders, tracking drivers, and handling payments.
