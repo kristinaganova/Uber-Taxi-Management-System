@@ -29,7 +29,7 @@ public:
 	User* clone() const override;
 
 	void checkMessages();
-	void placeOrder(const Address& address, const Address& destination, int numberOfPassengers, OrderManager& orders);
+	void placeOrder(const Address& address, const Address& destination, int numberOfPassengers);
 	Status checkOrderStatus(OrderManager& orders, unsigned int id);
 	void cancelOrder(OrderManager& orders, unsigned int orderId);
 	void rateDriver(const MyString& name,  int rating);

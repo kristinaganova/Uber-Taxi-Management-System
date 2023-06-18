@@ -17,6 +17,7 @@ void MessageStore::printUnreadMessages() const
             messages[i].markAsRead();
         }
     }
+    std::cout << "Successful operation!" << std::endl;
 }
 
 void MessageStore::removeMessage(unsigned int messageId)

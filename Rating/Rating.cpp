@@ -1,10 +1,10 @@
 #include "Rating.h"
 
 Rating::Rating()
-       :ratingValue(0), client(nullptr){}
+       :ratingValue(1) {}
 
-Rating::Rating(int rating, SharedPtr<Client> client)
-    : client(client)
+Rating::Rating(int rating, SharedPtr<Client> client) 
+    :client(client)
 {
     setRatingValue(rating);
 }

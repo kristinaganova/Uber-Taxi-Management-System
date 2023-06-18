@@ -150,8 +150,7 @@ void OrderManager::loadAllUnfinishedOrdersFromFile(const char* fileName)
 
 	unsigned int id;
 
-
-	while (file >> id )
+	while (file >> id)
 	{
 		Address startAddress;
 		Address destination;
@@ -169,7 +168,6 @@ void OrderManager::loadAllUnfinishedOrdersFromFile(const char* fileName)
 
 		Order order(startAddress, destination, passengerCount);
 
-
 		if (clientUsername != "NULL")
 		{
 			Client* client = static_cast<Client*>(UserManager::getInstance().findUserByUserName(clientUsername));
@@ -178,7 +176,7 @@ void OrderManager::loadAllUnfinishedOrdersFromFile(const char* fileName)
 
 		if (driverUsername != "NULL")
 		{
-		    Driver* driver = static_cast<Driver*>(UserManager::getInstance().findUserByUserName(driverUsername));
+			Driver* driver = static_cast<Driver*>(UserManager::getInstance().findUserByUserName(driverUsername));
 			order.setDriver(driver);
 		}
 

@@ -3,6 +3,7 @@
 #include "Vector.hpp"
 
 class Message;
+
 class MessageStore 
 {
     static unsigned int nextId;

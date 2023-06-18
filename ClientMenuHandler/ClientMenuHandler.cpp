@@ -5,7 +5,7 @@ ClientMenuHandler::ClientMenuHandler(UniquePointer<User> user, OrderManager& ord
 
 void ClientMenuHandler::handleMenu()
 {
-    Client* client = static_cast<Client*>(loggedInUser.get());
+    Client* client = static_cast<Client*>(loggedInUser.release());
     bool exitMenu = false;
 
     while (!exitMenu)
@@ -17,16 +17,18 @@ void ClientMenuHandler::handleMenu()
         case 1:
         {
             Address current;
-            std::cout << "Enter your current address: ";
-            std::cin >> current;
-            std::cout << "Enter your destination address: ";
+            std::cout << "Enter your current address:" << std::endl;
+            current.enterAddressDetails();
+
+            std::cout << "Enter your destination address:" << std::endl;
             Address destination;
-            std::cin >> destination;
-            std::cout << "Enter passengers count: ";
+            destination.enterAddressDetails();
+
+            std::cout << "Enter the number of passengers: ";
             int numberOfPassengers;
             std::cin >> numberOfPassengers;
 
-            client->placeOrder(current, destination, numberOfPassengers, *OrderManager::getInstance());
+            client->placeOrder(current, destination, numberOfPassengers);
             break;
         }
         case 2:
@@ -47,26 +49,47 @@ void ClientMenuHandler::handleMenu()
             break;
         }
         case 4:
+        {
             client->checkMessages();
-            break;  
-        case 5:
             break;
+        }
+        case 5:
+        {
+            MyString name;
+            int rating;
+            std::cout << "Enter name of the driver: " << std::endl;
+            std::cin >> name;
+            std::cout << "Enter rating from 1 to 5: " << std::endl;
+            std::cin >> rating;
+            client->rateDriver(name, rating);
+            std::cout << "Rating set successfully! " << std::endl;
+            break;
+        }
         case 6:
+        {
             double amount;
             std::cout << "Enter amount of money to add: " << std::endl;
             std::cin >> amount;
             client->addMoney(amount);
             std::cout << "Money added successfully! " << std::endl;
             std::cout << "Your balance is " << client->getBalance() << std::endl;
+
+            UserManager& users = UserManager::getInstance();
+            users.clearAndSaveAllRegisteredClientsToFile("ClientUsers.txt");
             break;
+        }
         case 7:
+        {
             loggedInUser->logout();
-            loggedInUser.release();
-            exitMenu = true; 
+            exitMenu = true;
             break;
+        }
         default:
+        {
             std::cout << "Invalid option. Please try again." << std::endl;
             break;
+        }
+        loggedInUser.release();
         }
     }
 }
@@ -83,6 +106,13 @@ int ClientMenuHandler::displayMenu() const
     std::cout << "6. Add money" << std::endl;
     std::cout << "7. Logout" << std::endl;
     std::cout << "Enter your choice: ";
-    std::cin >> choice;
+
+    while (!(std::cin >> choice))
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input. Please try again: ";
+    }
+
     return choice;
 }

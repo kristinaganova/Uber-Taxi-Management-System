@@ -6,7 +6,15 @@ class UserManager;
 
 unsigned int MessageManager::nextId = 1;
 
-MessageManager::MessageManager() = default;
+MessageManager::MessageManager() : users(UserManager::getInstance()), stores() {}
+
+void MessageManager::addAllStores()
+{
+    for (size_t i = 0; i < users.getUsersCount(); i++)
+    {
+        stores.pushBack(*users.getUsers()[i]->getMessages());
+    }
+}
 
 MessageManager& MessageManager::getInstance()
 {

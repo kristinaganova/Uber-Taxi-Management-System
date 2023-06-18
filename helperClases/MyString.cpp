@@ -3,6 +3,47 @@
 
 #pragma warning (disable : 4996)
 
+MyString MyString:: valueOf(int value)
+{
+	if (value == 0)
+	{
+		return MyString("0");
+	}
+
+	bool isNegative = false;
+	if (value < 0) {
+		isNegative = true;
+		value = -value;
+	}
+
+	int numDigits = 0;
+	int temp = value;
+	while (temp > 0)
+	{
+		temp /= 10;
+		numDigits++;
+	}
+
+	char* buffer = new char[numDigits + 1 + (isNegative ? 1 : 0)];
+	int index = numDigits + (isNegative ? 1 : 0);
+	buffer[index] = '\0';
+
+	while (value > 0)
+	{
+		buffer[--index] = '0' + (value % 10);
+		value /= 10;
+	}
+
+	if (isNegative)
+	{
+		buffer[--index] = '-';
+	}
+
+	MyString result(buffer);
+	delete[] buffer;
+	return result;
+}
+
 MyString::MyString() : MyString("") { }
 
 MyString::MyString(size_t size)
@@ -105,9 +146,23 @@ size_t MyString::length() const
 	{
 		size_t realSize = _size;
 		size_t mask = 1;
-		mask = ~(mask << (sizeof(_size) * 8 - 1)); //we remove the bit of the size that shows us that SSO is not applied.
+		mask = ~(mask << (sizeof(_size) * 8 - 1)); 
 		return realSize & mask;
 	}
+}
+
+MyString MyString::substr(size_t begin, size_t howMany) const
+{
+	if (begin + howMany > length())
+		throw std::length_error("Error, Substr out of range");
+
+
+	MyString res(howMany + 1);
+	for (int i = 0; i < howMany; i++)
+		res._data[i] = _data[begin + i];
+
+	res[howMany] = '\0';
+	return res;
 }
 
 void MyString::copyFrom(const MyString& other)

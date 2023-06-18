@@ -89,7 +89,7 @@ void User::initializeMessageStore()
 
 void User::saveRegisteredUserToFile(const User& user, const char* fileName)
 {
-    std::ofstream file(fileName, std::ios::app);
+    std::ofstream file(fileName);
     if (!file.is_open())
     {
         std::cout << "Error: Unable to open file " << fileName << " for writing." << std::endl;
@@ -120,5 +120,6 @@ bool User::login(const MyString& username, const MyString& password)
     {
         return true;
     }
+    std:: cout << "Error: Not correct username or password!" << std::endl;
     return false;
 }

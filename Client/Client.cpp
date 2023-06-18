@@ -3,75 +3,8 @@
 #include <iostream>
 #include <memory>
 #include "SharedPtr.hpp"
-#include "UserManager.h"
+#include "Vector.hpp"
 #include <sstream>
-
-namespace
-{
-    MyString readLine(std::ifstream& file)
-    {
-        std::string buffer;
-        std::getline(file, buffer);
-        return MyString(buffer.c_str());
-    }
-
-    void replaceBalanceInFile(const MyString& name, double newBalance, const MyString& filename)
-    {
-        std::ifstream file(filename.c_str());
-        if (!file.is_open())
-        {
-            std::cout << "Error while opening the file!" << std::endl;
-            return;
-        }
-
-        MyString line;
-        MyString temp = name + " ";
-
-        std::stringstream updatedLines;
-
-        while (!file.eof())
-        {
-            line = readLine(file);
-
-            if (line.substr(1, temp.length()) == temp)
-            {
-                MyString token;
-                std::stringstream ss(line.c_str());
-                while (ss >> token)
-                {
-                    if (token == name)
-                    {
-                        ss >> token;
-                        updatedLines << name << " " << newBalance;
-                        break;
-                    }
-                    else
-                    {
-                        updatedLines << token << " ";
-                    }
-                }
-            }
-            else
-            {
-                updatedLines << line;
-            }
-
-            updatedLines << std::endl;
-        }
-
-        file.close();
-
-        std::ofstream outFile(filename.c_str());
-        if (!outFile.is_open())
-        {
-            std::cout << "Error while opening the file!" << std::endl;
-            return;
-        }
-
-        outFile << updatedLines.str();
-        outFile.close();
-    }
-}
 
 Client::Client(const MyString& firstName, const MyString& lastName, const MyString& username, const MyString& password)
     : User(UserType::CLIENT, firstName, lastName, username, password), balance(0) {}
@@ -195,10 +128,11 @@ void Client::checkMessages()
     messages->printUnreadMessages();
 }
 
-void Client::placeOrder(const Address& address, const Address& destination, int numberOfPassengers, OrderManager& orders)
+void Client::placeOrder(const Address& address, const Address& destination, int numberOfPassengers)
 {
-    Order newOrder(address, destination, numberOfPassengers);
-    newOrder.setClient(this);
+    OrderManager& orders = *OrderManager::getInstance();
+    Order newOrder(address, destination, numberOfPassengers , Status::Pending, PaymentStatus::NotPaid, 0.0, this, nullptr);
+    //newOrder.setClient(this);
     orders.addOrder(newOrder);
     orders.notifyDriversInRange(newOrder);
 
@@ -249,5 +183,4 @@ void Client::payOrder(Order& order, double amount)
 void Client::addMoney(double amount)
 {
     balance += amount;
-    replaceBalanceInFile(getFirstName(), balance, "ClientUsers.txt");
 }

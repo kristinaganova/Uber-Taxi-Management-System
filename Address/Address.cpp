@@ -55,7 +55,7 @@ void Address::enterAddressDetails()
 std::ostream& operator<<(std::ostream& os, const Address& address)
 {
     os << address.name << " ";
-    os << address.point.x << ", " << address.point.y << " ";
+    os << address.point.x << " " << address.point.y << " ";
     os << address.additionalInfo << " ";
     return os;
 }

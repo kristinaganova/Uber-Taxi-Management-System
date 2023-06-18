@@ -11,7 +11,7 @@ class MessageManager
 {
     static unsigned int nextId;
     Vector<MessageStore> stores;
-    UniquePointer<UserManager> users;
+    UserManager& users;
 
     MessageManager();
     
@@ -22,6 +22,7 @@ class MessageManager
     MessageManager& operator=(MessageManager&& other) noexcept = delete;
     
 public:
+    void addAllStores();
     static MessageManager& getInstance();
     void addUserMessageStore(const MessageStore& store);
     UniquePointer<MessageStore>& getUserMessageStore(SharedPtr<User> userStore);

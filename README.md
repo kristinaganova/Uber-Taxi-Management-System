@@ -44,9 +44,11 @@ The system architecture consists of several classes, including Address, User (ab
 
 While the Taxi Company Application provides a range of functionalities, it is important to note that there are certain limitations and known issues within the current system:
 
-- **In-app Messaging**: The messaging system between clients and drivers may experience occasional delays in message delivery. Users may encounter situations where messages are not promptly received or displayed in the application.
+- **In-app Messaging**: Users may encounter situations where messages are not promptly received or displayed in the application.
 
-- **Rating Drivers**: In some cases, clients may experience difficulties submitting their ratings or encountering errors when trying to rate a driver. 
+- **Rating Drivers**: In some cases, clients experience difficulties submitting their ratings or encountering errors when trying to rate a driver. 
 
 ## Conclusion ##
 The Taxi Company Application offers an efficient solution for managing transportation services, improving user experience, and facilitating seamless communication between clients and drivers. With its comprehensive functionalities and well-designed system architecture, the application aims to optimize taxi services, enhance customer satisfaction, and improve overall operational effectiveness.
+
+# github repository - https://github.com/kristinaganova/Uber-Taxi-Management-System #

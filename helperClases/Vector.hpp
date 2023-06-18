@@ -56,22 +56,27 @@ Vector<T>::Vector() : Vector(INITIAL_CAPACITY) { }
 
 
 template<typename T>
-Vector<T>::Vector(size_t capacity) : capacity(capacity) {
+Vector<T>::Vector(size_t capacity) : capacity(capacity)
+{
 	data = new T[capacity];
 }
 
 template<typename T>
-Vector<T>::Vector(const Vector<T>& other) {
+Vector<T>::Vector(const Vector<T>& other) 
+{
 	copyFrom(other);
 }
 template<typename T>
-Vector<T>::Vector(Vector<T>&& other) noexcept {
+Vector<T>::Vector(Vector<T>&& other) noexcept
+{
 	move(std::move(other));
 }
 
 template<typename T>
-Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
-	if (this != &other) {
+Vector<T>& Vector<T>::operator=(const Vector<T>& other) 
+{
+	if (this != &other) 
+	{
 		free();
 		copyFrom(other);
 	}
@@ -80,8 +85,10 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
 }
 
 template<typename T>
-Vector<T>& Vector<T>::operator=(Vector<T>&& other) noexcept {
-	if (this != &other) {
+Vector<T>& Vector<T>::operator=(Vector<T>&& other) noexcept
+{
+	if (this != &other) 
+	{
 		free();
 		move(std::move(other));
 	}
@@ -90,41 +97,50 @@ Vector<T>& Vector<T>::operator=(Vector<T>&& other) noexcept {
 }
 
 template<typename T>
-Vector<T>::~Vector() {
+Vector<T>::~Vector() 
+{
 	free();
 }
 
 template<typename T>
-void Vector<T>::assertIndex(size_t index) const {
+void Vector<T>::assertIndex(size_t index) const 
+{
 	if (index >= size) {
 		throw std::exception("Out of range");
 	}
 }
 
 template<typename T>
-void Vector<T>::upsizeIfNeeded() {
-	if (size == capacity) {
+void Vector<T>::upsizeIfNeeded() 
+{
+	if (size == capacity) 
+	{
 		resize(capacity * RESIZE_COEF);
 	}
 }
 
 template<typename T>
-void Vector<T>::downsizeIfNeeded() {
-	if (size * RESIZE_COEF * RESIZE_COEF <= capacity) {
+void Vector<T>::downsizeIfNeeded() 
+{
+	if (size * RESIZE_COEF * RESIZE_COEF <= capacity) 
+	{
 		resize(capacity / RESIZE_COEF);
 	}
 }
 
 template<typename T>
-void Vector<T>::resize(size_t newCapacity) {
+void Vector<T>::resize(size_t newCapacity) 
+{
 	capacity = newCapacity;
 	T* temp = new T[capacity];
 
-	if (size > newCapacity) {
+	if (size > newCapacity) 
+	{
 		size = newCapacity;
 	}
 
-	for (size_t i = 0; i < size; i++) {
+	for (size_t i = 0; i < size; i++)
+	{
 		temp[i] = std::move(data[i]);
 	}
 
@@ -133,33 +149,39 @@ void Vector<T>::resize(size_t newCapacity) {
 }
 
 template<typename T>
-size_t Vector<T>::getSize() const {
+size_t Vector<T>::getSize() const
+{
 	return size;
 }
 
 template<typename T>
-size_t Vector<T>::getCapacity() const {
+size_t Vector<T>::getCapacity() const
+{
 	return capacity;
 }
 
 template<typename T>
-void Vector<T>::pushBack(const T& element) {
+void Vector<T>::pushBack(const T& element)
+{
 	upsizeIfNeeded();
 	data[size++] = element;
 }
 
 template<typename T>
-void Vector<T>::pushBack(T&& element) {
+void Vector<T>::pushBack(T&& element) 
+{
 	upsizeIfNeeded();
 	data[size++] = std::move(element);
 }
 
 template<typename T>
-void Vector<T>::pushAt(const T& element, size_t index) {
+void Vector<T>::pushAt(const T& element, size_t index) 
+{
 	assertIndex(index);
 	upsizeIfNeeded();
 
-	for (size_t i = size; i > index; i--) {
+	for (size_t i = size; i > index; i--)
+	{
 		data[i] = std::move(data[i - 1]);
 	}
 
@@ -168,11 +190,13 @@ void Vector<T>::pushAt(const T& element, size_t index) {
 }
 
 template<typename T>
-void Vector<T>::pushAt(T&& element, size_t index) {
+void Vector<T>::pushAt(T&& element, size_t index) 
+{
 	assertIndex(index);
 	upsizeIfNeeded();
 
-	for (size_t i = size; i > index; i--) {
+	for (size_t i = size; i > index; i--) 
+	{
 		data[i] = std::move(data[i - 1]);
 	}
 
@@ -181,7 +205,8 @@ void Vector<T>::pushAt(T&& element, size_t index) {
 }
 
 template<typename T>
-T Vector<T>::popBack() {
+T Vector<T>::popBack() 
+{
 	if (empty()) {
 		throw std::exception("Vector is empty");
 	}
@@ -190,13 +215,15 @@ T Vector<T>::popBack() {
 }
 
 template<typename T>
-T Vector<T>::popAt(size_t index) {
+T Vector<T>::popAt(size_t index) 
+{
 	assertIndex(index);
 	downsizeIfNeeded();
 
 	T temp = data[index];
 	size--;
-	for (size_t i = index; i < size; i++) {
+	for (size_t i = index; i < size; i++)
+	{
 		data[i] = std::move(data[i + 1]);
 	}
 
@@ -204,36 +231,42 @@ T Vector<T>::popAt(size_t index) {
 }
 
 template<typename T>
-bool Vector<T>::empty() const {
+bool Vector<T>::empty() const 
+{
 	return size == 0;
 }
 
 template<typename T>
-void Vector<T>::clear() {
+void Vector<T>::clear() 
+{
 	size = 0;
 }
 
 template<typename T>
-void Vector<T>::shrinkToFit() {
+void Vector<T>::shrinkToFit() 
+{
 	resize(size);
 }
 
 template<typename T>
-T& Vector<T>::operator[](size_t index) {
+T& Vector<T>::operator[](size_t index) 
+{
 	assertIndex(index);
 
 	return data[index];
 }
 
 template<typename T>
-const T& Vector<T>::operator[](size_t index) const {
+const T& Vector<T>::operator[](size_t index) const 
+{
 	assertIndex(index);
 
 	return data[index];
 }
 
 template<typename T>
-void Vector<T>::move(Vector<T>&& other) {
+void Vector<T>::move(Vector<T>&& other)
+{
 	size = other.size;
 	capacity = other.capacity;
 	data = other.data;
@@ -243,18 +276,21 @@ void Vector<T>::move(Vector<T>&& other) {
 }
 
 template<typename T>
-void Vector<T>::copyFrom(const Vector<T>& other) {
+void Vector<T>::copyFrom(const Vector<T>& other) 
+{
 	size = other.size;
 	capacity = other.capacity;
 	data = new T[capacity];
 
-	for (size_t i = 0; i < other.size; i++) {
+	for (size_t i = 0; i < other.size; i++)
+	{
 		data[i] = other.data[i];
 	}
 }
 
 template<typename T>
-void Vector<T>::free() {
+void Vector<T>::free() 
+{
 	delete[] data;
 	data = nullptr;
 	size = capacity = 0;

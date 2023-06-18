@@ -36,8 +36,10 @@ public:
 
 	MyString& operator+=(const MyString& other);
 
+	static MyString valueOf(int value);
 	const char* c_str() const;
 	size_t length() const;
+	MyString substr(size_t begin, size_t howMany) const;
 
 	char& operator[](size_t index);
 	char operator[](size_t index) const;
@@ -46,7 +48,6 @@ public:
 
 	friend MyString operator+(const MyString& lhs, const MyString& rhs);
 	friend std::istream& operator>>(std::istream& is, MyString& str);
-
 };
 
 std::ostream& operator<<(std::ostream& os, const MyString& obj);

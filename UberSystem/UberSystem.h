@@ -8,9 +8,9 @@
 
 class UberSystem
 {
-    UniquePointer<UserManager> users;
-    UniquePointer<OrderManager> orderManager;
-    UniquePointer<MessageManager> messageManager;
+    UserManager& users;
+    OrderManager& orderManager;
+    MessageManager& messageManager;
     UniquePointer<User> loggedInUser;
 
 public:

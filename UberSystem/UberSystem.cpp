@@ -14,7 +14,7 @@ static void startFunction()
     OrderManager::getInstance()->loadAllUnfinishedOrdersFromFile("unfinishedOrders.txt");
 }
 
-UberSystem::UberSystem() : loggedInUser(nullptr), users(&UserManager::getInstance()), orderManager(OrderManager::getInstance()), messageManager(&MessageManager::getInstance()) {}
+UberSystem::UberSystem() : loggedInUser(nullptr), users(UserManager::getInstance()), orderManager(*OrderManager::getInstance()), messageManager(MessageManager::getInstance()) {}
 
 void UberSystem::run()
 {
@@ -53,12 +53,12 @@ void UberSystem::run()
 
                 if (loggedInUser->getUserType() == UserType::CLIENT)
                 {
-                    ClientMenuHandler clientMenuHandler(std::move(loggedInUser), *orderManager);
+                    ClientMenuHandler clientMenuHandler(std::move(loggedInUser), orderManager);
                     handleMenu(clientMenuHandler);
                 }
                 else if (loggedInUser->getUserType() == UserType::DRIVER)
                 {
-                    DriverMenuHandler driverMenuHandler(std::move(loggedInUser), *messageManager);
+                    DriverMenuHandler driverMenuHandler(std::move(loggedInUser), messageManager);
                     handleMenu(driverMenuHandler);
                 }
                 else
@@ -96,7 +96,8 @@ int UberSystem::displayMainMenu()
 
 void UberSystem::login()
 {
-    users->loadAllUsersFromFile();
+    users.loadAllUsersFromFile();
+    MessageManager::getInstance().addAllStores();
 
     if (!loggedInUser)
     {
@@ -106,7 +107,7 @@ void UberSystem::login()
         std::cout << "Enter your password: ";
         std::cin >> password;
 
-        UniquePointer<User> user = users->findUserByUserName(username);
+        UniquePointer<User> user = users.findUserByUserName(username);
 
         if (user->login(username, password))
         {
@@ -117,7 +118,7 @@ void UberSystem::login()
         else
         {
             std::cout << "Login failed!" << std::endl;
-            loggedInUser = nullptr;
+            loggedInUser.release();
         }
     }
 }
@@ -155,7 +156,7 @@ void UberSystem::registerUser()
     if (newUser)
     {
         newUser->registerUser();
-        users->addUser(newUser);
+        users.addUser(newUser);
         std::cout << "Registration successful!" << std::endl;
     }
 }

@@ -3,17 +3,16 @@
 #include "helpers.h"
 #include <fstream>
 #include "UniquePtr.hpp"
-#include "OrderNotificationCenter.h"
 
 Driver::Driver(const MyString& firstName, const MyString& lastName, const MyString& username, 
                const MyString& password, const MyString& carNumber, const MyString& phoneNumber)
-      :User(UserType::DRIVER , firstName, lastName, username, password), orders(OrderManager::getInstance()), ratings()
+      :User(UserType::DRIVER , firstName, lastName, username, password), orders(*OrderManager::getInstance()), ratings()
 {
     setCarNumber(carNumber);
     setPhoneNumber(phoneNumber);
 }
 
-Driver::Driver() = default;
+Driver::Driver() :orders(*OrderManager::getInstance()) {}
 
 const MyString& Driver::getCarNumber() const
 {
@@ -164,11 +163,6 @@ Vector<User*> Driver::loadRegisteredUserFromFile(const char* fileName)
     return registeredUsers;
 }
 
-void Driver::receiveMessage(const Message& message)
-{
-    messages->addMessage(message);
-}
-
 void Driver::changeAddress(const Address& address)
 {
     this->currentAddress = address;
@@ -182,19 +176,29 @@ void Driver::checkMessages()
 
 void Driver::acceptOrder(unsigned int id)
 {
-    Order* foundOrder = orders->findOrderById(id);
-    if (foundOrder) 
+    Order* foundOrder = orders.findOrderById(id);
+    if (foundOrder)
     {
         foundOrder->setStatus(Status::Accepted);
         foundOrder->setDriver(this);
-        Message message(("The order is accepted by: " + this->getFirstName()), foundOrder->getClient()->getMessages()->getNextId());
-        foundOrder->getClient()->getMessages()->addMessage(message);
+        SharedPtr<Client> client = foundOrder->getClient();
+
+        Message message("Your order has been accepted!", client->getMessages()->getNextId());
+        client->getMessages()->addMessage(message);
+
+        foundOrder->setPaymentStatus(PaymentStatus::Paid);
+
+        std::cout << "Order accepted successfully!" << std::endl;
+    }
+    else
+    {
+        std::cout << "No order with ID:" << id << "found!" << std::endl;
     }
 }
 
 void Driver::declineOrder(unsigned int id)
 {
-    Order* foundOrder = orders->findOrderById(id);
+    Order* foundOrder = orders.findOrderById(id);
     if (foundOrder)
     {
         foundOrder->setStatus(Status::Canceled);
@@ -204,7 +208,7 @@ void Driver::declineOrder(unsigned int id)
 
 void Driver::finishOrder(unsigned int id, double amountToBePaid)
 {
-    Order* foundOrder = orders->findOrderById(id);
+    Order* foundOrder = orders.findOrderById(id);
 
     if (!foundOrder)
     {

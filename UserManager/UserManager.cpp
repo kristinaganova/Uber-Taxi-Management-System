@@ -3,14 +3,6 @@
 #include "Driver.h"
 #include "Rating.h"
 
-void UserManager::free()
-{
-    for (size_t i = 0; i < users.getSize(); i++)
-    {
-        delete users[i];
-    }
-}
-
 UserManager& UserManager::getInstance()
 {
     static UserManager instance;
@@ -20,11 +12,6 @@ UserManager& UserManager::getInstance()
 void UserManager::addUser(User* newUser)
 {
 	users.pushBack(newUser);
-}
-
-UserManager::~UserManager()
-{
-    free();
 }
 
 UserManager::UserManager() : users(Vector<User*>()) {}
@@ -72,6 +59,16 @@ User* UserManager::findUserByName(const MyString& name)
     return nullptr;
 }
 
+const Vector<User*> UserManager::getUsers() const
+{
+    return users;
+}
+
+size_t UserManager::getUsersCount() const
+{
+    return (getUsers().getSize());
+}
+
 void UserManager::rateDriver(const MyString& driverName, const Rating& rating)
 {
     Driver* driver = static_cast<Driver*>(UserManager::findUserByUserName(driverName));
@@ -86,11 +83,38 @@ void UserManager::saveAllRegisteredUserToFile(const char* fileName) const
 	}
 }
 
+void UserManager::clearAndSaveAllRegisteredClientsToFile(const char* fileName) const
+{
+    std::ofstream file(fileName);
+    if (!file)
+    {
+        throw std::runtime_error("Failed to open the file.");
+    }
+
+    file.close();
+
+    file.open(fileName, std::ios::app);
+    if (!file)
+    {
+        throw std::runtime_error("Failed to open the file for writing.");
+    }
+
+    for (size_t i = 0; i < users.getSize(); i++)
+    {
+        if (users[i]->getUserType() == UserType::CLIENT)
+        {
+            Client* client = static_cast<Client*>(users[i]);
+            client->saveRegisteredUserToFile(*client, fileName);
+        }
+    }
+
+    file.close();
+}
+
 void UserManager::loadAllUsersFromFile()
 {
     users.clear();
 
-    // Load client users
     Client client;
     Vector<User*> clientRegisteredUsers = client.loadRegisteredUserFromFile("ClientUsers.txt");
     for (size_t i = 0; i < clientRegisteredUsers.getSize(); i++)
@@ -101,7 +125,6 @@ void UserManager::loadAllUsersFromFile()
     }
     clientRegisteredUsers.clear(); 
 
-    // Load driver users
     Driver driver;
     Vector<User*> driverRegisteredUsers = driver.loadRegisteredUserFromFile("driverUsers.txt");
     for (size_t i = 0; i < driverRegisteredUsers.getSize(); i++)

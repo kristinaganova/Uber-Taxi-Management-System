@@ -1,135 +1,181 @@
 #pragma once
+#include <iostream>
+#include <memory>
 
 template <typename T>
 class SharedPtr
 {
-private:
-    T* data;
-    unsigned int* refCount;
+	T* data;
+	unsigned* pointersCount;
+
+	void free();
+	void copyFrom(const SharedPtr<T>& other);
 
 public:
-    SharedPtr();
-    explicit SharedPtr(T* ptr);
-    SharedPtr(const SharedPtr<T>& other);
-    ~SharedPtr();
+	SharedPtr();
+	SharedPtr(T* data);
 
-    SharedPtr<T>& operator=(const SharedPtr<T>& other);
+	SharedPtr(const SharedPtr<T>& other);
+	SharedPtr& operator=(const SharedPtr<T>& other);
 
-    T& operator*() const;
-    T* operator->() const;
+	const T& operator*() const;
+	T& operator*();
+	const T* operator->() const;
+	T* operator->();
+	explicit operator bool() const;
 
-    bool operator==(const SharedPtr<T>& other) const;
-    bool operator!=(const SharedPtr<T>& other) const;
+	~SharedPtr();
 
-    operator bool() const;
+	friend std::istream& operator>>(std::istream& is, SharedPtr<T>& sp);
 
-    unsigned int useCount() const;
-    void reset();
+	friend std::ostream& operator<<(std::ostream& os, const SharedPtr<T>& sp);
 };
 
-#include <iostream>
 template <typename T>
-SharedPtr<T>::SharedPtr() : data(nullptr), refCount(nullptr)
+std::istream& operator>>(std::istream& is, SharedPtr<T>& sp);
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const SharedPtr<T>& sp);
+
+template<typename T>
+std::istream& operator>>(std::istream& is, SharedPtr<T>& sp)
 {
+	T* ptr = new T();
+	if (!(is >> *ptr))
+	{
+		delete ptr;
+		throw std::runtime_error("Failed to read input for T");
+	}
+	sp = SharedPtr<T>(ptr);
+	return is;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const SharedPtr<T>& sp)
+{
+	if (sp.data)
+		os << *sp.data;
+	return os;
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(T* ptr) : data(ptr), refCount(new unsigned int(1))
+void SharedPtr<T>::free()
 {
+	if (data == nullptr || pointersCount == nullptr)
+		return;
+
+	if (*pointersCount == 1)
+	{
+		delete data;
+		delete pointersCount;
+	}
+	else
+		(*pointersCount)--;
+
+	data = nullptr;
+	pointersCount = nullptr;
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(const SharedPtr<T>& other) : data(other.data), refCount(other.refCount)
+void SharedPtr<T>::copyFrom(const SharedPtr<T>& other)
 {
-    if (refCount)
-        ++(*refCount);
+	data = other.data;
+	pointersCount = other.pointersCount;
+	if (pointersCount)
+	{
+		(*pointersCount)++;
+	}
+	else
+	{
+		data = nullptr;
+	}
+}
+
+
+template <typename T>
+SharedPtr<T>::SharedPtr()
+{
+	data = nullptr;
+	pointersCount = nullptr;
 }
 
 template <typename T>
-SharedPtr<T>::~SharedPtr()
+SharedPtr<T>::SharedPtr(T* data)
 {
-    if (refCount)
-    {
-        --(*refCount);
-        if (*refCount == 0)
-        {
-            delete data;
-            delete refCount;
-        }
-    }
+	if (data == nullptr) {
+		this->data = nullptr;
+		this->pointersCount = nullptr;
+	}
+	else {
+		this->data = data;
+		this->pointersCount = new unsigned(1);
+	}
 }
 
 template <typename T>
 SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr<T>& other)
 {
-    if (this != &other)
-    {
-        if (refCount)
-        {
-            --(*refCount);
-            if (*refCount == 0)
-            {
-                delete data;
-                delete refCount;
-            }
-        }
+	if (this != &other)
+	{
+		free();
 
-        data = other.data;
-        refCount = other.refCount;
-        if (refCount)
-            ++(*refCount);
-    }
-    return *this;
+		if (other.data == nullptr) {
+			data = nullptr;
+			pointersCount = nullptr;
+		}
+		else {
+			copyFrom(other);
+		}
+	}
+	return *this;
+}
+
+
+template <typename T>
+SharedPtr<T>::SharedPtr(const SharedPtr<T>& other)
+{
+	copyFrom(other);
 }
 
 template <typename T>
-T& SharedPtr<T>::operator*() const
+const T& SharedPtr<T>::operator*() const
 {
-    return *data;
+	if (data == nullptr)
+	{
+		throw std::runtime_error("Pointer not set");
+	}
+	return *data;
 }
 
 template <typename T>
-T* SharedPtr<T>::operator->() const
+T& SharedPtr<T>::operator*()
 {
-    return data;
+	if (data == nullptr)
+	{
+		throw std::runtime_error("Pointer not set");
+	}
+	return *data;
 }
 
 template <typename T>
-bool SharedPtr<T>::operator==(const SharedPtr<T>& other) const
+SharedPtr<T>::~SharedPtr()
 {
-    return data == other.data;
+	free();
 }
 
-template <typename T>
-bool SharedPtr<T>::operator!=(const SharedPtr<T>& other) const
+template<typename T>
+T* SharedPtr<T>::operator->()
 {
-    return data != other.data;
+	return data;
 }
 
-template <typename T>
-SharedPtr<T>::operator bool() const
+template<typename T>
+const T* SharedPtr<T>::operator->() const
 {
-    return data != nullptr;
+	return data;
 }
 
-template <typename T>
-unsigned int SharedPtr<T>::useCount() const
-{
-    return refCount ? *refCount : 0;
-}
-
-template <typename T>
-void SharedPtr<T>::reset()
-{
-    if (refCount)
-    {
-        --(*refCount);
-        if (*refCount == 0)
-        {
-            delete data;
-            delete refCount;
-        }
-    }
-    data = nullptr;
-    refCount = nullptr;
+template<typename T>
+SharedPtr<T>::operator bool() const {
+	return data;
 }

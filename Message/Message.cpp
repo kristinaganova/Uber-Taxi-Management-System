@@ -10,6 +10,13 @@ Message::Message(const MyString& content, const SharedPtr<User>& sender, const S
 
 Message::Message() : Message("", 0) {}
 
+void Message::setReceiver(SharedPtr<User> receiver)
+{
+    if (receiver)
+        this->receiver = receiver;
+    else receiver = nullptr;
+}
+
 const MyString& Message::getContent() const
 {
     markAsRead();

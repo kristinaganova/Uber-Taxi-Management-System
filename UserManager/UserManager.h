@@ -18,17 +18,20 @@ class UserManager
     UserManager(UserManager&& other) noexcept = delete;
     UserManager& operator=(UserManager&& other) noexcept = delete;
 
-    void free();
 public:
     static UserManager& getInstance();
     void addUser(User* newUser);
-    ~UserManager();
+    ~UserManager() = default;
 
+    const Vector<User*> getUsers() const;
+    size_t getUsersCount() const;
     void rateDriver(const MyString& driverName, const Rating& rating);
     Vector<Driver*> getDrivers() const;
     UserType getTypeByIndex(unsigned int index) const;
     User* findUserByName(const MyString& name);
     User* findUserByUserName(const MyString& userName);
+
+    void clearAndSaveAllRegisteredClientsToFile(const char* fileName) const;
 
     void saveAllRegisteredUserToFile(const char* fileName) const;
     void loadAllUsersFromFile();

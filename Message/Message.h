@@ -19,6 +19,8 @@ public:
     Message(const MyString& content, const SharedPtr<User>& sender, const SharedPtr<User>& receiver, unsigned int id);
     Message();
 
+    void setReceiver(SharedPtr<User> receiver);
+
     const MyString& getContent() const;
     const SharedPtr<User>& getSender() const;
     const SharedPtr<User>& getReceiver() const;

@@ -6,7 +6,7 @@ DriverMenuHandler::DriverMenuHandler(UniquePointer<User> user, MessageManager& m
 
 void DriverMenuHandler::handleMenu()
 {
-    Driver* driver = static_cast<Driver*>(loggedInUser.get());
+    Driver* driver = static_cast<Driver*>(loggedInUser.release());
     bool exitMenu = false;
 
     while (!exitMenu)
@@ -55,7 +55,6 @@ void DriverMenuHandler::handleMenu()
         }
         case 6:
             loggedInUser->logout();
-            loggedInUser.release();
 
             exitMenu = true;
             break;
@@ -77,6 +76,11 @@ int DriverMenuHandler::displayMenu() const
     std::cout << "5. Finish Order" << std::endl;
     std::cout << "6. Logout" << std::endl;
     std::cout << "Enter your choice: ";
-    std::cin >> choice;
+    while (!(std::cin >> choice))
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input. Please try again: ";
+    }
     return choice;
 }

@@ -87,12 +87,28 @@ Status Order::getStatus() const
 
 SharedPtr<Client> Order::getClient() const
 {
-    return client;
+    if (client)
+    {
+        return client;
+    }
+    else
+    {
+        std::cout << "No client found!" << std::endl;
+        return SharedPtr<Client>(nullptr);
+    }
 }
 
 SharedPtr<Driver> Order::getDriver() const
 {
-    return driver;
+    if (driver)
+    {
+        return driver;
+    }
+    else
+    {
+        std::cout << "No driver found!" << std::endl;
+        return SharedPtr<Driver>(nullptr); 
+    }
 }
 
 void Order::setStartAddress(const Address& start)
@@ -131,7 +147,10 @@ void Order::setPaymentAmount(double amount)
 
 void Order::setClient(SharedPtr<Client> client)
 {
-    this->client = client;
+    if (client)
+        this->client = client;
+    else
+        this->client = nullptr;
 }
 
 void Order::setDriver(SharedPtr<Driver> driver)
