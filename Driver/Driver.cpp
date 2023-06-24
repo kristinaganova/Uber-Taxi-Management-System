@@ -179,11 +179,11 @@ void Driver::acceptOrder(unsigned int id)
     Order* foundOrder = orders.findOrderById(id);
     if (foundOrder)
     {
-        foundOrder->setStatus(Status::Accepted);
-        foundOrder->setDriver(this);
         SharedPtr<Client> client = foundOrder->getClient();
         if (client)
         {
+            foundOrder->setStatus(Status::Accepted);
+            foundOrder->setDriver(this);
             Message message("Your order has been accepted!", client->getMessages()->getNextId());
             client->getMessages()->addMessage(message);
             std::cout << "Order accepted successfully!" << std::endl;
@@ -219,12 +219,11 @@ void Driver::finishOrder(unsigned int id, double amountToBePaid)
         return;
     }
 
-    foundOrder->setStatus(Status::Completed);
-    foundOrder->setPaymentAmount(amountToBePaid);
-
     SharedPtr<Client> client = foundOrder->getClient();
     if (client)
     {
+        foundOrder->setStatus(Status::Completed);
+        foundOrder->setPaymentAmount(amountToBePaid);
         client->payOrder(*foundOrder, amountToBePaid);
         Message message(("You paid " + MyString::valueOf(amountToBePaid)), client->getMessages()->getNextId());
         client->getMessages()->addMessage(message);
