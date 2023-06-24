@@ -1,6 +1,6 @@
 #include "Message.h"
 
-Message::Message(const MyString& content, unsigned int id) : content(content), id(id) {}
+Message::Message(const MyString& content, unsigned int id) : content(content), id(id), read(false){}
 
 Message::Message(const MyString& content, const SharedPtr<User>& sender, const SharedPtr<User>& receiver, unsigned int id)
     : content(content), sender(sender), receiver(receiver), id(id)
