@@ -41,12 +41,7 @@ Drivers have access to various features within the application:
 The system architecture consists of several classes, including Address, User (abstract), Client, Driver, Order, OrderManager, Message, MessageManager, Rating, MenuHandler (abstract), ClientMenuHandler, and DriverMenuHandler. These classes manage various aspects of the application, such as user registration, order management, messaging, and menu handling.
 
 ## Known Limitations and Issues ##
-
-While the Taxi Company Application provides a range of functionalities, it is important to note that there are certain limitations and known issues within the current system:
-
 - **In-app Messaging**: Users may encounter situations where messages are not promptly received or displayed in the application.
-
-- **Rating Drivers**: In some cases, clients experience difficulties submitting their ratings or encountering errors when trying to rate a driver. 
 
 ## Conclusion ##
 The Taxi Company Application offers an efficient solution for managing transportation services, improving user experience, and facilitating seamless communication between clients and drivers. With its comprehensive functionalities and well-designed system architecture, the application aims to optimize taxi services, enhance customer satisfaction, and improve overall operational effectiveness.
