@@ -87,23 +87,6 @@ void User::initializeMessageStore()
     messages = UniquePointer<MessageStore>(new MessageStore());
 }
 
-void User::saveRegisteredUserToFile(const User& user, const char* fileName)
-{
-    std::ofstream file(fileName);
-    if (!file.is_open())
-    {
-        std::cout << "Error: Unable to open file " << fileName << " for writing." << std::endl;
-        return;
-    }
-    file << (char*)(user.type) << ", "
-        << user.firstName << ", "
-        << user.lastName << ", "
-        << user.username << ", "
-        << user.password << std::endl;
-
-    file.close();
-}
-
 void User::sendMessage(const SharedPtr<User>& receiver, const MyString& content)
 {
     MessageManager::getInstance().sendMessage(this, receiver, content);
