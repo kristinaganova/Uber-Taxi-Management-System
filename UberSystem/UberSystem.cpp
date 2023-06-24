@@ -109,16 +109,23 @@ void UberSystem::login()
 
         UniquePointer<User> user = users.findUserByUserName(username);
 
-        if (user->login(username, password))
+        if (user) 
         {
-            loggedInUser = std::move(user);
-            std::cout << "Login successful!" << std::endl;
-            return;
+            if (user->login(username, password))
+            {
+                loggedInUser = std::move(user);
+                std::cout << "Login successful!" << std::endl;
+                return;
+            }
+            else
+            {
+                std::cout << "Login failed!" << std::endl;
+                loggedInUser.release();
+            }
         }
         else
         {
-            std::cout << "Login failed!" << std::endl;
-            loggedInUser.release();
+            std::cout << "No user found!" << std::endl;
         }
     }
 }
