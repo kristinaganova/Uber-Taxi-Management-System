@@ -45,5 +45,3 @@ The system architecture consists of several classes, including Address, User (ab
 
 ## Conclusion ##
 The Taxi Company Application offers an efficient solution for managing transportation services, improving user experience, and facilitating seamless communication between clients and drivers. With its comprehensive functionalities and well-designed system architecture, the application aims to optimize taxi services, enhance customer satisfaction, and improve overall operational effectiveness.
-
-# github repository - https://github.com/kristinaganova/Uber-Taxi-Management-System #
