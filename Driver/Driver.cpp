@@ -182,13 +182,16 @@ void Driver::acceptOrder(unsigned int id)
         foundOrder->setStatus(Status::Accepted);
         foundOrder->setDriver(this);
         SharedPtr<Client> client = foundOrder->getClient();
-
-        Message message("Your order has been accepted!", client->getMessages()->getNextId());
-        client->getMessages()->addMessage(message);
-
-        foundOrder->setPaymentStatus(PaymentStatus::Paid);
-
-        std::cout << "Order accepted successfully!" << std::endl;
+        if (client)
+        {
+            Message message("Your order has been accepted!", client->getMessages()->getNextId());
+            client->getMessages()->addMessage(message);
+            std::cout << "Order accepted successfully!" << std::endl;
+        }
+        else
+        {
+            std::cout << "Order was not accepted successfully!" << std::endl;
+        }
     }
     else
     {
@@ -220,14 +223,19 @@ void Driver::finishOrder(unsigned int id, double amountToBePaid)
     foundOrder->setPaymentAmount(amountToBePaid);
 
     SharedPtr<Client> client = foundOrder->getClient();
-    client->payOrder(*foundOrder, amountToBePaid);
+    if (client)
+    {
+        client->payOrder(*foundOrder, amountToBePaid);
+        Message message(("You paid " + MyString::valueOf(amountToBePaid)), client->getMessages()->getNextId());
+        client->getMessages()->addMessage(message);
+        foundOrder->setPaymentStatus(PaymentStatus::Paid);
+        std::cout << "Order finished successfully!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Order was not finished successfully!" << std::endl;
+    }
 
-    Message message(("You paid " + MyString::valueOf(amountToBePaid)), client->getMessages()->getNextId());
-    client->getMessages()->addMessage(message);
-
-    foundOrder->setPaymentStatus(PaymentStatus::Paid);
-
-    std::cout << "Order finished successfully!" << std::endl;
 }
 
 void Driver::addRating(const Rating& rating)
