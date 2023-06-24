@@ -156,10 +156,20 @@ void Client::cancelOrder(OrderManager& orders, unsigned int orderId)
     orders.removeOrder(orderId);
 }
 
-void Client::rateDriver(const MyString& name,  int rating)
+void Client::rateDriver(const MyString& firstName, const MyString& lastName, int rating)
 {
     UserManager& users = UserManager::getInstance();
-    Driver* driver = static_cast<Driver*>(users.findUserByName(name));
+    Vector<Driver*> drivers = users.getDrivers();
+
+    Driver* driver = nullptr;
+    for (size_t i = 0; i < drivers.getSize(); i++)
+    {
+        if (drivers[i]->getFirstName() == firstName && drivers[i]->getLastName() == lastName)
+        {
+            driver = drivers[i];
+            break;
+        }
+    }
 
     if (driver)
     {
