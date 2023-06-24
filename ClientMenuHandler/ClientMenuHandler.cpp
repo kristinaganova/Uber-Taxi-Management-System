@@ -55,13 +55,17 @@ void ClientMenuHandler::handleMenu()
         }
         case 5:
         {
-            MyString name;
+            MyString firstName;
+            MyString lastName;
+
             int rating;
-            std::cout << "Enter name of the driver: " << std::endl;
-            std::cin >> name;
+            std::cout << "Enter first name of the driver: " << std::endl;
+            std::cin >> firstName;
+            std::cout << "Enter last name of the driver: " << std::endl;
+            std::cin >> lastName;
             std::cout << "Enter rating from 1 to 5: " << std::endl;
             std::cin >> rating;
-            client->rateDriver(name, rating);
+            client->rateDriver(firstName, lastName, rating);
             std::cout << "Rating set successfully! " << std::endl;
             break;
         }
